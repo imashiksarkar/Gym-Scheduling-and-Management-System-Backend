@@ -22,7 +22,9 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  tokens Token[]
+  tokens   Token[]
+  Schedule Schedule[]
+  Booking  Booking[]
 
   @@map("users")
 }
@@ -41,4 +43,33 @@ model Token {
   @@index([token], name: "token_idx")
   @@index([userId], name: "user_id_idx")
   @@map("tokens")
+}
+
+model Schedule {
+  id        String   @id @default(uuid())
+  title     String   @db.VarChar(120)
+  startsAt  DateTime @map("starts_at")
+  endsAt    DateTime @map("ends_at")
+  trainerId String   @map("trainer_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  trainer User      @relation(fields: [trainerId], references: [id], onDelete: Cascade)
+  Booking Booking[]
+
+  @@map("schedules")
+}
+
+model Booking {
+  id         String   @id @default(uuid())
+  scheduleId String   @map("schedule_id")
+  traineeId  String   @map("trainee_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  schedule Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+  trainee  User     @relation(fields: [traineeId], references: [id], onDelete: Cascade)
+
+  @@unique([scheduleId, traineeId])
+  @@map("bookings")
 }
