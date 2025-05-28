@@ -1,4 +1,6 @@
 import { faker } from '@faker-js/faker'
+import { type Express } from 'express'
+import request from 'supertest'
 
 export const getUserCred = () => ({
   name: faker.person.fullName(),
@@ -6,37 +8,17 @@ export const getUserCred = () => ({
   password: 'Aa@6mk',
 })
 
-// export const createAdminUser = async () => {
-//   const user = await request(await getApp)
-//     .post('/auth/signup')
-//     .send({ ...pokimonCred, email: `pokimin${genRandomString()}@gmail.com` })
-//     .expect(201)
+export const createTrainee = async (app: Express) => {
+  const userPayload: Partial<ReturnType<typeof getUserCred>> = getUserCred()
+  const res = await request(app).post('/auth/signup').send(userPayload)
 
-//   const email = user.body.data.email
-
-//   await AuthService.changeRole({
-//     email,
-//     role: UserRole.admin,
-//   })
-
-//   const admin = await request(await getApp)
-//     .post('/auth/signin')
-//     .send({ ...pokimonCred, email })
-
-//   const [adminAT, adminRT] = admin.headers['set-cookie']
-
-//   return [admin.body, adminAT, adminRT]
-// }
-
-// export const createUser = async () => {
-//   const user = await request(await getApp)
-//     .post('/auth/signup')
-//     .send({ ...pokimonCred, email: `pokimin${genRandomString()}@gmail.com` })
-
-//   const [userAT, userRT] = user.headers['set-cookie']
-
-//   return [user.body, userAT, userRT]
-// }
+  return {
+    userPayload,
+    body: res.body,
+    at: res.headers['set-cookie'][0],
+    rt: res.headers['set-cookie'][1],
+  }
+}
 
 export const genRandomString = () => {
   return Math.random().toString(36).substring(2, 15)

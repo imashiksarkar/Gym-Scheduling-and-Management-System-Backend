@@ -1,5 +1,6 @@
+import { UserRole } from '@prisma/client'
 import getAppInstance from '@src/app'
-import { getUserCred } from '@src/test/utils'
+import { createTrainee, getUserCred } from '@src/test/utils'
 import request from 'supertest'
 import { describe, expect, it } from 'vitest'
 
@@ -18,8 +19,7 @@ describe('auth', async () => {
     })
 
     it('should be able to signin', async () => {
-      const userPayload: Partial<ReturnType<typeof getUserCred>> = getUserCred()
-      await request(app).post('/auth/signup').send(userPayload).expect(201)
+      const { userPayload } = await createTrainee(app)
 
       delete userPayload.name
       const signedInUser = await request(app)
@@ -32,75 +32,62 @@ describe('auth', async () => {
       expect(signedInUser.body.data.password).toBeUndefined()
     })
 
-    // it('should not be able to signin with wrong password', async () => {
-    //   await request(app).post('/auth/signup').send(pokominCred).expect(201)
+    it('should not be able to signin with wrong password', async () => {
+      const { userPayload } = await createTrainee(app)
 
-    //   const res = await request(app).post('/auth/signin').send({
-    //     email: pokominCred.email,
-    //     password: 'A5shiklngya', // wrong password
-    //   })
+      const res = await request(app).post('/auth/signin').send({
+        email: userPayload.email,
+        password: 'A5shiklngya', // wrong password
+      })
 
-    //   expect(res.body.success).toBe(false)
-    //   expect(res.body.error.message[0]).toMatch(/invalid/gi)
-    // })
+      expect(res.body.success).toBe(false)
+      expect(res.body.error.message[0]).toMatch(/invalid/gi)
+    })
 
-    // it('should be able to signout', async () => {
-    //   const user = await request(app)
-    //     .post('/auth/signup')
-    //     .send(pokominCred)
-    //     .expect(201)
-    //   const [_, refreshToken] = user.headers['set-cookie']
+    it('should be able to signout', async () => {
+      const { rt: refreshToken } = await createTrainee(app)
 
-    //   const res = await request(app)
-    //     .delete('/auth/signout')
-    //     .set('Cookie', refreshToken)
-    //     .expect(200)
+      const res = await request(app)
+        .delete('/auth/signout')
+        .set('Cookie', refreshToken)
+        .expect(200)
 
-    //   expect(res.headers['set-cookie']).toEqual([
-    //     'accessToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
-    //     'refreshToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
-    //   ])
-    // })
+      expect(res.headers['set-cookie']).toEqual([
+        'accessToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
+        'refreshToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
+      ])
+    })
 
-    // it('should return all roles', async () => {
-    //   const res = await request(app)
-    //     .get('/auth/roles')
-    //     .send(pokominCred)
-    //     .expect(200)
-    //   console.log('Here are all the allowed roles', res.body.data)
-    // })
+    it('should return all roles', async () => {
+      const roles = await request(app).get('/auth/roles').expect(200)
 
-    // it('lets user to refresh token', async () => {
-    //   const user = await request(app)
-    //     .post('/auth/signup')
-    //     .send(pokominCred)
-    //     .expect(201)
+      expect(roles.body.success).toBe(true)
+      expect(roles.body.data).toEqual(UserRole)
+    })
 
-    //   const [_, refreshToken] = user.headers['set-cookie']
+    it('lets user to refresh token', async () => {
+      const { rt, at } = await createTrainee(app)
 
-    //   const res = await request(app)
-    //     .post('/auth/refresh')
-    //     .set('Cookie', refreshToken)
+      const res = await request(app).post('/auth/refresh').set('Cookie', rt)
+      const [newAt, newRt] = res.headers['set-cookie']
 
-    //   expect(res.body.success).toBe(true)
-    // })
+      expect(res.body.success).toBe(true)
+      expect(at).not.toBe(newAt)
+      expect(rt).not.toBe(newRt)
+    })
 
-    // it('should be able to fetch own profile', async () => {
-    //   // create user
-    //   const user = await request(app)
-    //     .post('/auth/signup')
-    //     .send(pokominCred)
-    //     .expect(201)
-    //   const [userAT] = user.headers['set-cookie']
+    it('should be able to fetch own profile', async () => {
+      // create user
+      const { at: userAT } = await createTrainee(app)
 
-    //   // fetch own profile
-    //   const profile = await request(app)
-    //     .get('/auth/profile')
-    //     .set('Cookie', userAT)
+      // fetch own profile
+      const profile = await request(app)
+        .get('/auth/profile')
+        .set('Cookie', userAT)
 
-    //   expect(profile.body.success).toBe(true)
-    //   expect(profile.body.data.id).toBeDefined()
-    // })
+      expect(profile.body.success).toBe(true)
+      expect(profile.body.data.id).toBeDefined()
+    })
   })
 
   // describe('Role: Admin', () => {

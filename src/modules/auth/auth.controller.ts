@@ -161,6 +161,7 @@ class AuthController {
 
         const r = response()
           .success(200)
+          .data({ accessToken, refreshToken: newRefreshToken })
           .message('Tokens refreshed successfully')
           .exec()
         res.status(r.code).json(r)
