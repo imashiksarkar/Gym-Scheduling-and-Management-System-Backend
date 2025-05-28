@@ -1,0 +1,8 @@
+onlyBuiltDependencies:
+  - '@prisma/client'
+  - '@prisma/engines'
+  - '@serialport/bindings'
+  - argon2
+  - esbuild
+  - prisma
+  - serialport
