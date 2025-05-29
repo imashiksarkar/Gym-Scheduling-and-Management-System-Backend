@@ -52,11 +52,15 @@ class BookingController {
     this.router.get(
       path,
       requireAuth(),
-      requireRole(UserRole.trainee),
+      requireRole([UserRole.trainee, UserRole.admin]),
       catchAsync(async (req: ReqWithUser, res: Response) => {
-        const userId = req.locals.user.id
+        const { id: userId, role } = req.locals.user
 
-        const newBooking = await this.bookingService.getBookings(userId)
+        const isAdmin = role === UserRole.admin
+        const newBooking = await this.bookingService.getBookings(
+          userId,
+          isAdmin
+        )
 
         const r = response().success(201).data(newBooking).exec()
         res.status(r.code).json(r)
