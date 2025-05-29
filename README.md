@@ -76,7 +76,7 @@ Gym Class Scheduling &amp; Membership System with Admin, Trainer, and Trainee ro
 
 - **Role: Admin**
   - [x] list all bookings `GET /bookings`
-  - [ ] get a single booking `GET /bookings/:bookingId`
+  - [x] get a single booking `GET /bookings/:bookingId`
 
 ---
 
