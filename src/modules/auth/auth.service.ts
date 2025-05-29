@@ -5,13 +5,13 @@ import { SigninUserDto, SignupUserDto } from './auth.dtos'
 
 export default class AuthService {
   static readonly createTrainer = async (userAttr: SignupUserDto) => {
-    const existingUser = await db.user.findFirst({
+    const trainer = await db.user.findFirst({
       where: {
         email: userAttr.email,
       },
     })
 
-    if (existingUser)
+    if (trainer)
       throw response().error(409).message('User already exists').exec()
 
     const hashedPassword = await Hashing.hash(userAttr.password)
@@ -27,6 +27,17 @@ export default class AuthService {
       throw response().error(500).message('Something went wrong').exec()
 
     return user
+  }
+
+  static readonly listAllTrainers = async () => {
+    const trainers = await db.user.findMany({
+      where: { role: UserRole.trainer },
+      omit: {
+        password: true,
+      },
+    })
+
+    return trainers
   }
 
   static readonly signup = async (userAttr: SignupUserDto) => {

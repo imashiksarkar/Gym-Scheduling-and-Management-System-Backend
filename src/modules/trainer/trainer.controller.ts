@@ -47,10 +47,26 @@ class TrainerController {
         // TODO: if password exists in the redis then it will force the trainer to change the password
 
         const r = response()
-          .success(200)
+          .success(201)
           .data({ ...signedUpTrainer, password: randomPass })
           .message('Here are all the roles.')
           .exec()
+        res.status(r.code).json(r)
+      })
+    )
+  }
+
+  private static readonly listAllTrainers = async (
+    path = this.getPath('/')
+  ) => {
+    this.router.get(
+      path,
+      requireAuth(),
+      requireRole(UserRole.admin),
+      catchAsync(async (_req: Request, res: Response) => {
+        const trainers = await this.authService.listAllTrainers()
+
+        const r = response().success(200).data(trainers).exec()
         res.status(r.code).json(r)
       })
     )
