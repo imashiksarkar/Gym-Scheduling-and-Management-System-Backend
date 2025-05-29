@@ -1,9 +1,35 @@
 import { UserRole } from '@prisma/client'
 import { db } from '@src/config'
 import { Hashing, jwt, response } from '@src/lib'
-import { ChangeUserRoleDto, SigninUserDto, SignupUserDto } from './auth.dtos'
+import { SigninUserDto, SignupUserDto } from './auth.dtos'
 
 export default class AuthService {
+  static readonly createTrainer = async (userAttr: SignupUserDto) => {
+    const existingUser = await db.user.findFirst({
+      where: {
+        email: userAttr.email,
+      },
+    })
+
+    if (existingUser)
+      throw response().error(409).message('User already exists').exec()
+
+    const hashedPassword = await Hashing.hash(userAttr.password)
+    userAttr.password = hashedPassword
+
+    const user = await db.user.create({
+      data: { ...userAttr, role: UserRole.trainer },
+      omit: {
+        password: true,
+      },
+    })
+
+    if (!user)
+      throw response().error(500).message('Something went wrong').exec()
+
+    return user
+  }
+
   static readonly signup = async (userAttr: SignupUserDto) => {
     const existingUser = await db.user.findFirst({
       where: {
@@ -114,24 +140,6 @@ export default class AuthService {
   }
 
   static readonly getRoles = async () => UserRole
-
-  static readonly changeRole = async (userAttr: ChangeUserRoleDto) => {
-    const newUser = await db.user.update({
-      where: {
-        email: userAttr.email,
-      },
-      data: {
-        role: userAttr.role,
-      },
-      omit: {
-        password: true,
-      },
-    })
-
-    if (!newUser) throw response().error(404).message('User not found').exec()
-
-    return newUser
-  }
 
   static readonly refresh = async (refreshToken: string) => {
     const deletedToken = await db.token.delete({
