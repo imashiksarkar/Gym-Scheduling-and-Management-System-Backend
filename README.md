@@ -8,8 +8,8 @@ Gym Class Scheduling &amp; Membership System with Admin, Trainer, and Trainee ro
 
 ### Auth Module
 
-- [x] trainee can signup `POST /auth/signup`
-- [x] trainee can signin `POST /auth/signin`
+- [x] signup as trainee `POST /auth/signup`
+- [x] user can signin `POST /auth/signin`
 - [x] fetch own profile `GET /auth/profile`
 - [x] refresh token `GET /auth/refresh`
 - [x] signout `DELETE /auth/signout`
@@ -23,37 +23,60 @@ Gym Class Scheduling &amp; Membership System with Admin, Trainer, and Trainee ro
 
 ### Trainer Module
 
+- [x] list all trainers `GET /trainers`
+- [ ] get a single trainer `GET /trainers/:trainerId`
+- [ ] list trainer schedules `GET /trainers/:trainerId/schedules`
+
 - **Role: Admin**
+
   - [x] create trainer `POST /trainers`
-  - [x] list all trainers `GET /trainers`
   - [x] delete trainer `DELETE /trainers/:trainerId`
-  - [ ] list trainer schedules `DELETE /trainers/:trainerId/schedules`
-  - [ ] list all the schedules of a trainer `GET /trainers/:trainerId/schedules`
+
+- **Role: Trainer**
+  - [ ] get own schedules as trainer `GET /trainers/schedules`
 
 ---
 
 ### Schedule Module
 
 - [x] list all schedules `GET /schedules`
-- [x] list all available schedules `GET /schedules/available`
+- [ ] list all available schedules `GET /schedules/available` <!-- also that is not booked by more that 10 trainees -->
 - [x] get a single schedule `GET /schedules/:scheduleId`
+- [ ] get trainees who booked the schedule `GET /schedules/:scheduleId/trainees`
 
 - **Role: Admin**
 
   - [x] create schedule `POST /schedules`
-  - [ ] assign trainer to schedule `PATCH /schedules/:scheduleId`
+  - [ ] update trainer of a schedule `PATCH /schedules/:scheduleId`
   - [ ] delete schedule `DELETE /schedules/:scheduleId`
+  - [ ] get trainees who booked a schedule `GET /schedules/:scheduleId/trainees`
+
+- **Role: Trainee**
+  - [ ] check if schedule is full (trainee-side) `GET /schedules/:id/status`
+
+---
+
+### Booking Module
 
 - **Role: Trainee**
 
-  - [ ] get available schedules `GET /schedules`
-  - [ ] book schedule `POST /schedules/:id`
-  - [ ] get own schedule `GET /schedules/me`
-  - [ ] cancel schedule `DELETE /schedules/:id`
+  - [ ] book a schedule `POST /bookings` // max 10 trainee can book per schedule
 
-- **Role: Trainer**
+  ```json
+  // input payload
+  {
+    "scheduleId": "",
+    "traineeId": ""
+  }
+  ```
 
-  get own schedule `GET /schedules?as=trainer`
+  - list own bookings `GET /bookings`
+  - [ ] get a single booking `GET /bookings/:bookingId`
+  - [ ] cancel booking `DELETE /bookings/:id`
+
+- **Role: Admin**
+  - [ ] list all bookings `GET /bookings`
+  - [ ] get a single booking `GET /bookings/:bookingId`
 
 ---
 
