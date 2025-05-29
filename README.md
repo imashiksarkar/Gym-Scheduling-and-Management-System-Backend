@@ -24,7 +24,7 @@ Gym Class Scheduling &amp; Membership System with Admin, Trainer, and Trainee ro
 ### Trainer Module
 
 - **Role: Admin**
-  - [ ] create trainer `POST /trainers`
+  - [x] create trainer `POST /trainers`
   - [ ] list all trainers `GET /trainers`
   - [ ] delete trainer `DELETE /trainers/:trainerId`
   - [ ] list trainer schedules `DELETE /trainers/:trainerId/schedules`
