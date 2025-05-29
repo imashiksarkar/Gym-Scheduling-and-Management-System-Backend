@@ -6,4 +6,10 @@ export const createBookingDto = z.object({
   }),
 })
 
+export const getBookingParamsDto = z.object({
+  bookingId: z.string({ required_error: 'Booking ID is required' }).uuid({
+    message: 'Invalid booking ID',
+  }),
+})
+
 export type CreateBookingDto = z.infer<typeof createBookingDto>

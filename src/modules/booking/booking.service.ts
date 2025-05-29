@@ -39,4 +39,14 @@ export default class BookingService {
 
     return bookings
   }
+
+  static readonly getBooking = async (bookingId: string) => {
+    const booking = await db.booking.findFirst({
+      where: {
+        id: bookingId,
+      },
+    })
+
+    return booking
+  }
 }

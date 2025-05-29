@@ -4,7 +4,7 @@ import { catchAsync, response } from '../../lib'
 import { requireAuth, requireRole } from '../../middlewares'
 import BookingService from './booking.service'
 import { ReqWithUser } from 'middlewares/requireAuth.middleware'
-import { createBookingDto } from './booking.dtos'
+import { createBookingDto, getBookingParamsDto } from './booking.dtos'
 
 class BookingController {
   private static readonly router = Router()
@@ -59,6 +59,27 @@ class BookingController {
         const newBooking = await this.bookingService.getBookings(userId)
 
         const r = response().success(201).data(newBooking).exec()
+        res.status(r.code).json(r)
+      })
+    )
+  }
+
+  private static readonly getBooking = async (
+    path = this.getPath('/:bookingId')
+  ) => {
+    this.router.get(
+      path,
+      requireAuth(),
+      requireRole(UserRole.trainee),
+      catchAsync(async (req: ReqWithUser, res: Response) => {
+        const params = getBookingParamsDto.parse(req.params)
+
+        const booking = await this.bookingService.getBooking(params.bookingId)
+
+        if (!booking)
+          throw response().error(404).message('Booking not found!').exec()
+
+        const r = response().success(200).data(booking).exec()
         res.status(r.code).json(r)
       })
     )
