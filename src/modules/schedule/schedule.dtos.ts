@@ -29,8 +29,17 @@ export const createScheduleDto = z
   }))
 
 export const scheduleParamsDto = z.object({
-  scheduleId: z.string({ required_error: 'Schedule id is required!' }).uuid(),
+  scheduleId: z.string({ required_error: 'Schedule id is required!' }).uuid({
+    message: 'Invalid schedule ID',
+  }),
+})
+
+export const updateScheduleTrainerDto = scheduleParamsDto.extend({
+  trainerId: z.string({ required_error: 'Trainer ID is required' }).uuid({
+    message: 'Invalid trainer ID',
+  }),
 })
 
 export type CreateScheduleDto = z.infer<typeof createScheduleDto>
 export type ScheduleParamsDto = z.infer<typeof scheduleParamsDto>
+export type UpdateScheduleTrainerDto = z.infer<typeof updateScheduleTrainerDto>

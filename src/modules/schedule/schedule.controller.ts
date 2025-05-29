@@ -2,7 +2,11 @@ import { UserRole } from '@prisma/client'
 import { Request, Response, Router } from 'express'
 import { catchAsync, response } from '../../lib'
 import { requireAuth, requireRole } from '../../middlewares'
-import { createScheduleDto, scheduleParamsDto } from './schedule.dtos'
+import {
+  createScheduleDto,
+  scheduleParamsDto,
+  updateScheduleTrainerDto,
+} from './schedule.dtos'
 import ScheduleService from './schedule.service'
 
 class ScheduleController {
@@ -91,6 +95,33 @@ class ScheduleController {
         const schedules = await this.scheduleService.getSchedule(
           params.scheduleId
         )
+
+        if (!schedules)
+          throw response().success(404).message('Schedule not found.').exec()
+
+        const r = response().success(200).data(schedules).exec()
+        res.status(r.code).json(r)
+      })
+    )
+  }
+
+  private static readonly updateScheduleTrainer = async (
+    path = this.getPath('/:scheduleId')
+  ) => {
+    this.router.patch(
+      path,
+      requireAuth(),
+      requireRole(UserRole.admin),
+      catchAsync(async (req: Request, res: Response) => {
+        const { scheduleId, trainerId } = updateScheduleTrainerDto.parse({
+          ...req.body,
+          ...req.params,
+        })
+
+        const schedules = await this.scheduleService.updateScheduleTrainer({
+          scheduleId,
+          trainerId,
+        })
 
         if (!schedules)
           throw response().success(404).message('Schedule not found.').exec()

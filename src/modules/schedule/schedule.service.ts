@@ -1,6 +1,6 @@
 import { db } from '../../config'
 import { response } from '../../lib'
-import { CreateScheduleDto } from './schedule.dtos'
+import { CreateScheduleDto, UpdateScheduleTrainerDto } from './schedule.dtos'
 
 export default class ScheduleService {
   static readonly getSchedules = async () => await db.schedule.findMany()
@@ -69,5 +69,21 @@ export default class ScheduleService {
     })
 
     return schedule
+  }
+
+  static readonly updateScheduleTrainer = async ({
+    scheduleId,
+    trainerId,
+  }: UpdateScheduleTrainerDto) => {
+    const updatedSchedule = await db.schedule.update({
+      where: {
+        id: scheduleId,
+      },
+      data: {
+        trainerId,
+      },
+    })
+
+    return updatedSchedule
   }
 }

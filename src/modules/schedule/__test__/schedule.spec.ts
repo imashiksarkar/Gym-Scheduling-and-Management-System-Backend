@@ -4,6 +4,7 @@ import getAppInstance from '../../../app'
 import {
   createAdmin,
   createSchedule,
+  createTrainee,
   createTrainer,
   getSchedulePayload,
   makeSchedulesUnavailable,
@@ -29,7 +30,7 @@ describe('Schedule Module', async () => {
     expect(schedules.body.data).toHaveLength(5)
   })
 
-  it('get a single schedule', async () => {
+  it('gets a single schedule', async () => {
     const { at: adminAT } = await createAdmin(app)
     const { body: trainer } = await createTrainer(app)
     const schedule = await createSchedule(app, adminAT, trainer.data.id) // create 1 schedules
@@ -44,7 +45,7 @@ describe('Schedule Module', async () => {
     expect(schedules.body.data.id).toBeDefined()
   })
 
-  it('list all available schedules', async () => {
+  it('lists all available schedules', async () => {
     const { at: adminAT } = await createAdmin(app)
     const { body: trainer } = await createTrainer(app)
 
@@ -61,6 +62,8 @@ describe('Schedule Module', async () => {
     expect(schedules.body.success).toBe(true)
     expect(schedules.body.data).toHaveLength(3)
   })
+
+  it.todo('gets trainees who booked the schedule', async () => {})
 
   describe('Role: Admin', () => {
     it('should be able create schedule', async () => {
@@ -101,6 +104,33 @@ describe('Schedule Module', async () => {
       expect(schedule.body.success).toBe(false)
       expect(schedule.body.error).toBeDefined()
       expect(schedule.body.error.message.join('')).toMatch(/per day/i)
+    })
+
+    it('updates the trainer of a schedule', async () => {
+      const { at: adminAT } = await createAdmin(app)
+      const { body: trainer } = await createTrainer(app)
+
+      const schedule = await request(app)
+        .post('/schedules')
+        .set('Cookie', adminAT)
+        .send(getSchedulePayload(trainer.data.id))
+        .expect(201)
+
+      const scheduleId = schedule.body.data.id
+
+      const { body: trainer2 } = await createTrainer(app)
+
+      const updatedSchedule = await request(app)
+        .patch(`/schedules/${scheduleId}`)
+        .set('Cookie', adminAT)
+        .send({
+          trainerId: trainer2.data.id,
+        })
+
+      expect(schedule.body.success).toBe(true)
+      expect(schedule.body.data.trainerId).not.toBe(
+        updatedSchedule.body.data.trainerId
+      )
     })
   })
 })
