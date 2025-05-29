@@ -6,7 +6,7 @@
   "scripts": {
     "setup": "./setup.sh",
     "start": "node ./dist/server.js",
-    "dev": "tsx watch ./src/server.ts",
+    "dev": "tsx watch ./server.ts",
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "test": "vitest --ui",
     "test:run": "vitest --run",
