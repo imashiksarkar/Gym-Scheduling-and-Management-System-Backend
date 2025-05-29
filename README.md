@@ -1,10 +1,40 @@
 # Gym-Scheduling-and-Management-System-Backend
 
+[Live Link](https://gsms-api.ashiksarkar.xyz)
+
 Gym Class Scheduling &amp; Membership System with Admin, Trainer, and Trainee roles. Admins schedule up to 5 classes/day, assign trainers; trainees can book classes (max 10 per class) and manage profiles. Secure JWT authentication and error handling ensure smooth, role-based gym management.
+
+## ER Diagram
+
+![ER Diagram](./docs/ER-Diagram.png)
+
+## 🛠️ Used Technologies
+
+- Node.js
+- Express.js
+- Vitest
+- Supertest
+- TypeScript
+- Prisma
+- PostgreSQL
+- Zod
+- JWT
+- Docker
+- Docker Compose
+- Postman
 
 ## 📡 API Endpoints
 
----
+[Postman Collection](./docs/postman-collection.json)
+
+```json
+// admin credentials
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "Aa@6mk"
+}
+```
 
 ### Auth Module
 
@@ -40,7 +70,7 @@ Gym Class Scheduling &amp; Membership System with Admin, Trainer, and Trainee ro
 ### Schedule Module
 
 - [x] list all schedules `GET /schedules`
-- [ ] list all available schedules `GET /schedules/available` <!-- also that is not booked by more that 10 trainees -->
+- [x] list all available schedules `GET /schedules/available` <!-- also that is not booked by more that 10 trainees -->
 - [x] get a single schedule `GET /schedules/:scheduleId`
 - [ ] get trainees who booked the schedule `GET /schedules/:scheduleId/trainees`
 
@@ -106,6 +136,7 @@ Gym Class Scheduling &amp; Membership System with Admin, Trainer, and Trainee ro
   }
 }
 
+// error output
 {
   "success": false,
   "code": 409,

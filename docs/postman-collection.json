@@ -1,0 +1,711 @@
+{
+	"info": {
+		"_postman_id": "7fbf0b91-6b02-4c2f-a2e3-fb3cc242a8a2",
+		"name": "GSMS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16493198"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Role: Admin",
+					"item": [
+						{
+							"name": "Fetch all users",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/auth/users",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"auth",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Fetch single user",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/auth/users/<userId>",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"auth",
+										"users",
+										"<userId>"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"Aa@6mk\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/signup",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Signin",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"Aa@6mk\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/signin",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch own profile",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/auth/profile",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh token",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/auth/refresh",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Signout",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/auth/signout",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"signout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch all roles",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/auth/roles",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"roles"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Trainer",
+			"item": [
+				{
+					"name": "Role: Admin",
+					"item": [
+						{
+							"name": "Create trainer",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Mr. Benjamin Kautzer MD\",\n    \"email\": \"Adella97@hotmail.com\",\n    \"password\": \"Aa@6mk\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/trainers",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"trainers"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete a trainer",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/trainers/<trainerId>",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"trainers",
+										"<trainerId>"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Role: Trainer",
+					"item": [
+						{
+							"name": "Get own schedules",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/trainers/schedules",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"trainers",
+										"schedules"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get trainer by id",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/trainers/<trainerId>",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"trainers",
+								"<trainerId>"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all trainers",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/trainers",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"trainers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get trainer schedules",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/trainers/<trainerId>/schedules",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"trainers",
+								"<trainerId>",
+								"schedules"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Schedule",
+			"item": [
+				{
+					"name": "Role: Admin",
+					"item": [
+						{
+							"name": "Update trainer of a schedule",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"trainerId\": \"put_a_valid_trainer_id\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/schedules/:scheduleId",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"schedules",
+										":scheduleId"
+									],
+									"variable": [
+										{
+											"key": "scheduleId",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create schedule",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"startsAt\": \"2025-05-29T08:50:29.994Z\", // must be 5 munutes more that current time\n    \"title\": \"ambulo\",\n    \"trainerId\": \"5cb0b76b-aaad-45e3-a76c-1d3f51fb7584\" // foreign key\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/schedules",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"schedules"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete schedule",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"startsAt\": \"2025-05-29T08:50:29.994Z\", // must be 5 munutes more that current time\n    \"title\": \"ambulo\",\n    \"trainerId\": \"5cb0b76b-aaad-45e3-a76c-1d3f51fb7584\" // foreign key\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/schedules/:scheduleId",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"schedules",
+										":scheduleId"
+									],
+									"variable": [
+										{
+											"key": "scheduleId",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get all schedule",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/schedules",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"schedules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get schedule by id",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/schedules/:scheduleId",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"schedules",
+								":scheduleId"
+							],
+							"variable": [
+								{
+									"key": "scheduleId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get available schedules",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/schedules/available",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"schedules",
+								"available"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Booking",
+			"item": [
+				{
+					"name": "Role: Trainee",
+					"item": [
+						{
+							"name": "Book a schedule",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"scheduleId\": \"\",\n    \"traineeId\": \"\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/bookings",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"bookings"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get own bookings",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/bookings",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"bookings"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get booking by id",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/bookings/:bookingId",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"bookings",
+										":bookingId"
+									],
+									"variable": [
+										{
+											"key": "bookingId",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cancel booking",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/bookings/:id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"bookings",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Role: Admin",
+					"item": [
+						{
+							"name": "Getall bookings",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/bookings",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"bookings"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get a single booking by id",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/bookings/:bookingId",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"bookings",
+										":bookingId"
+									],
+									"variable": [
+										{
+											"key": "bookingId",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "https://gsms-1-0-0.onrender.com",
+			"type": "string"
+		}
+	]
+}

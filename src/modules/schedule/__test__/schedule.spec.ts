@@ -145,12 +145,10 @@ describe('Schedule Module', async () => {
         .delete(`/schedules/${scheduleId}`)
         .set('Cookie', adminAT)
 
-      console.log(deletedSchedule.body)
-
-      // expect(schedule.body.success).toBe(true)
-      // expect(schedule.body.data.trainerId).not.toBe(
-      //   deletedSchedule.body.data.trainerId
-      // )
+      expect(schedule.body.success).toBe(true)
+      expect(schedule.body.data.trainerId).not.toBe(
+        deletedSchedule.body.data.trainerId
+      )
     })
   })
 })
