@@ -117,5 +117,3 @@ export const makeSchedulesUnavailable = async () => {
     },
   })
 }
-
-export const genRandomPass = () => faker.internet.password({ length: 12 })

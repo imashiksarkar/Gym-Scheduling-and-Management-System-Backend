@@ -1,8 +1,7 @@
 import { UserRole } from '@prisma/client'
 import { Request, Response, Router } from 'express'
-import { catchAsync, response } from '../../lib'
+import { catchAsync, response, genRandomPass } from '../../lib'
 import { requireAuth, requireRole } from '../../middlewares'
-import { genRandomPass } from '../../test/utils'
 import { createTrainerDto, deleteTrainerParams } from '../auth/auth.dtos'
 import AuthService from '../auth/auth.service'
 
