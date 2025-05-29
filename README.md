@@ -48,7 +48,7 @@ Gym Class Scheduling &amp; Membership System with Admin, Trainer, and Trainee ro
 
   - [x] create schedule `POST /schedules`
   - [x] update trainer of a schedule `PATCH /schedules/:scheduleId`
-  - [ ] delete schedule `DELETE /schedules/:scheduleId`
+  - [x] delete schedule `DELETE /schedules/:scheduleId`
   - [ ] get trainees who booked a schedule `GET /schedules/:scheduleId/trainees`
 
 - **Role: Trainee**

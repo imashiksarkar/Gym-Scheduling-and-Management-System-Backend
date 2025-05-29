@@ -5,8 +5,9 @@ import { cors, db } from './config'
 import { getRelativeTime, response } from './lib'
 import './lib/processListeners'
 import './lib/validatedEnv'
-import { errorHandler, notFoundHandler, requireAuth } from './middlewares'
+import { errorHandler, notFoundHandler } from './middlewares'
 import authModule from './modules/auth'
+import bookingModule from './modules/booking'
 import scheduleModule from './modules/schedule'
 import trainerModule from './modules/trainer'
 
@@ -39,7 +40,7 @@ const getAppInstance = async () => {
       res.status(r.code).json(r)
     })
 
-    app.use(authModule, trainerModule, scheduleModule)
+    app.use(authModule, trainerModule, scheduleModule, bookingModule)
 
     app.use(notFoundHandler())
     app.use(errorHandler())
