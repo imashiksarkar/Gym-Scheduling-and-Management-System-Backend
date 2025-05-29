@@ -1,7 +1,9 @@
 import { catchAsync, response } from '@src/lib'
 import { Request, Response, Router } from 'express'
 import ScheduleService from './schedule.service'
-import { createScheduleDto } from './schedule.dtos'
+import { createScheduleDto, scheduleParamsDto } from './schedule.dtos'
+import { requireAuth, requireRole } from '@src/middlewares'
+import { UserRole } from '@prisma/client'
 
 class ScheduleController {
   private static readonly router = Router()
@@ -29,6 +31,8 @@ class ScheduleController {
   private static readonly createSchedule = async (path = this.getPath('/')) => {
     this.router.post(
       path,
+      requireAuth(),
+      requireRole(UserRole.admin),
       catchAsync(async (req: Request, res: Response) => {
         const schedulePayload = createScheduleDto.parse(req.body)
 
@@ -41,6 +45,43 @@ class ScheduleController {
           .data(createdSchedule)
           .message('Schedule created successfully.')
           .exec()
+        res.status(r.code).json(r)
+      })
+    )
+  }
+
+  private static readonly getSchedules = async (path = this.getPath('/')) => {
+    this.router.get(
+      path,
+      catchAsync(async (_req: Request, res: Response) => {
+        const schedules = await this.scheduleService.getSchedules()
+
+        const r = response()
+          .success(200)
+          .data(schedules)
+          .message('Schedule created successfully.')
+          .exec()
+        res.status(r.code).json(r)
+      })
+    )
+  }
+
+  private static readonly getSchedule = async (
+    path = this.getPath('/:scheduleId')
+  ) => {
+    this.router.get(
+      path,
+      catchAsync(async (req: Request, res: Response) => {
+        const params = scheduleParamsDto.parse(req.params)
+
+        const schedules = await this.scheduleService.getSchedule(
+          params.scheduleId
+        )
+
+        if (!schedules)
+          throw response().success(404).message('Schedule not found.').exec()
+
+        const r = response().success(200).data(schedules).exec()
         res.status(r.code).json(r)
       })
     )

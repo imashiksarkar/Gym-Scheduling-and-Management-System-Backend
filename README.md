@@ -34,11 +34,12 @@ Gym Class Scheduling &amp; Membership System with Admin, Trainer, and Trainee ro
 
 ### Schedule Module
 
+- [x] list all schedules `GET /schedules`
+- [x] get a single schedule `GET /schedules/:scheduleId`
+
 - **Role: Admin**
 
-  - [ ] create schedule `POST /schedules`
-  - [ ] list all schedules `GET /schedules`
-  - [ ] get a single schedule `GET /schedules/:scheduleId`
+  - [x] create schedule `POST /schedules`
   - [ ] assign trainer to schedule `PATCH /schedules/:scheduleId`
   - [ ] delete schedule `DELETE /schedules/:scheduleId`
 
@@ -78,6 +79,17 @@ Gym Class Scheduling &amp; Membership System with Admin, Trainer, and Trainee ro
       "password": ["Password is required"]
       },
     "message": ["Invalid credentials"]
+  }
+}
+
+{
+  "success": false,
+  "code": 409,
+  "status": "Conflict",
+  "error": {
+    "message": [
+      "You can't create more than 5 schedules per day."
+    ]
   }
 }
 ```

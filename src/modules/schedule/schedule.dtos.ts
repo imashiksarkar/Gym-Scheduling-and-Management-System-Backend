@@ -28,4 +28,9 @@ export const createScheduleDto = z
     ).toISOString(),
   }))
 
+export const scheduleParamsDto = z.object({
+  scheduleId: z.string({ required_error: 'Schedule id is required!' }).uuid(),
+})
+
 export type CreateScheduleDto = z.infer<typeof createScheduleDto>
+export type ScheduleParamsDto = z.infer<typeof scheduleParamsDto>

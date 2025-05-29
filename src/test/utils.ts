@@ -79,4 +79,27 @@ export const createTrainer = async (app: Express) => {
   }
 }
 
+export const createSchedule = async (
+  app: Express,
+  adminAT: string,
+  trainerId: string,
+  trainerCount: number = 1
+) => {
+  const schedule = await request(app)
+    .post('/schedules')
+    .set('Cookie', adminAT)
+    .send(getSchedulePayload(trainerId))
+    .expect(201)
+
+  if (trainerCount < 2) return schedule.body
+
+  for (const element of Array.from({ length: trainerCount })) {
+    await request(app)
+      .post('/schedules')
+      .set('Cookie', adminAT)
+      .send(getSchedulePayload(trainerId))
+      .expect(201)
+  }
+}
+
 export const genRandomPass = () => faker.internet.password({ length: 12 })

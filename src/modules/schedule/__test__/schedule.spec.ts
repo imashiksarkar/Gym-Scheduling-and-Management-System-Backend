@@ -1,15 +1,47 @@
 import getAppInstance from '@src/app'
 import {
   createAdmin,
-  createTrainee,
+  createSchedule,
   createTrainer,
   getSchedulePayload,
 } from '@src/test/utils'
 import request from 'supertest'
 import { describe, expect, it } from 'vitest'
 
-describe('auth', async () => {
+describe('Schedule Module', async () => {
   const app = await getAppInstance()
+
+  it('can list all trainers', async () => {
+    const { at: adminAT } = await createAdmin(app)
+    const { body: trainer } = await createTrainer(app)
+    await createSchedule(app, adminAT, trainer.data.id, 5) // create 5 schedules
+
+    // get all schedules
+    const schedules = await request(app)
+      .get('/schedules')
+      .set('Cookie', adminAT)
+
+    console.log(schedules.body)
+
+    expect(schedules.body.success).toBe(true)
+    expect(schedules.body.data).toBeDefined()
+    expect(schedules.body.data).toHaveLength(5)
+  })
+
+  it('get a single schedule', async () => {
+    const { at: adminAT } = await createAdmin(app)
+    const { body: trainer } = await createTrainer(app)
+    const schedule = await createSchedule(app, adminAT, trainer.data.id) // create 1 schedules
+
+    // get all schedules
+    const schedules = await request(app)
+      .get(`/schedules/${schedule.data.id}`)
+      .set('Cookie', adminAT)
+
+    expect(schedules.body.success).toBe(true)
+    expect(schedules.body.data).toBeDefined()
+    expect(schedules.body.data.id).toBeDefined()
+  })
 
   describe('Role: Admin', () => {
     it('should be able create schedule', async () => {
