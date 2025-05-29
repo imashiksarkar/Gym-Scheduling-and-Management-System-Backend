@@ -26,13 +26,21 @@ Gym Class Scheduling &amp; Membership System with Admin, Trainer, and Trainee ro
 - **Role: Admin**
   - [x] create trainer `POST /trainers`
   - [x] list all trainers `GET /trainers`
-  - [ ] delete trainer `DELETE /trainers/:trainerId`
+  - [x] delete trainer `DELETE /trainers/:trainerId`
   - [ ] list trainer schedules `DELETE /trainers/:trainerId/schedules`
   - [ ] list all the schedules of a trainer `GET /trainers/:trainerId/schedules`
 
 ---
 
 ### Schedule Module
+
+- **Role: Admin**
+
+  - [ ] create schedule `POST /schedules`
+  - [ ] list all schedules `GET /schedules`
+  - [ ] get a single schedule `GET /schedules/:scheduleId`
+  - [ ] assign trainer to schedule `PATCH /schedules/:scheduleId`
+  - [ ] delete schedule `DELETE /schedules/:scheduleId`
 
 - **Role: Trainee**
 
@@ -44,12 +52,6 @@ Gym Class Scheduling &amp; Membership System with Admin, Trainer, and Trainee ro
 - **Role: Trainer**
 
   get own schedule `GET /schedules?as=trainer`
-
-- **Role: Admin**
-
-  create schedule `POST /schedules`
-  list all schedules `GET /schedules`
-  assign trainer to schedule `PUT /schedules/:id`
 
 ---
 

@@ -5,6 +5,7 @@ import { cors, db } from '@src/config'
 import { getRelativeTime, response } from '@src/lib'
 import authModule from '@src/modules/auth'
 import trainerModule from '@src/modules/trainer'
+import scheduleModule from '@src/modules/schedule'
 import cookieParser from 'cookie-parser'
 import express, { Request, Response } from 'express'
 import helmet from 'helmet'
@@ -38,7 +39,7 @@ const getAppInstance = async () => {
       res.status(r.code).json(r)
     })
 
-    app.use(authModule, trainerModule)
+    app.use(authModule, trainerModule, scheduleModule)
 
     app.use(notFoundHandler())
     app.use(errorHandler())

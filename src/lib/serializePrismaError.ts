@@ -25,6 +25,10 @@ const serializePrismaError = (err: any) => {
         statusCode = 404
         message = 'Requested record not found'
         break
+      case 'P2003':
+        statusCode = 400
+        message = 'Foreign key violation: ' + JSON.stringify(err.meta)
+        break
       default:
         message = err.message
     }

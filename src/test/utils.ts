@@ -5,6 +5,12 @@ import authService from '@src/modules/auth/auth.service'
 import { type Express } from 'express'
 import request from 'supertest'
 
+export const getSchedulePayload = (trainerId: string) => ({
+  startsAt: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
+  title: faker.lorem.word(),
+  trainerId,
+})
+
 export const getUserCred = () => ({
   name: faker.person.fullName(),
   email: faker.internet.email(),
@@ -57,6 +63,19 @@ export const createAdmin = async (app: Express) => {
     body: admin.body,
     at: adminAT,
     rt: adminRT,
+  }
+}
+
+export const createTrainer = async (app: Express) => {
+  const { at: adminAT } = await createAdmin(app)
+
+  const trainer = await request(app)
+    .post('/trainers')
+    .set('Cookie', adminAT)
+    .send(getUserCred())
+
+  return {
+    body: trainer.body,
   }
 }
 
