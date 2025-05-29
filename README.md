@@ -75,7 +75,7 @@ Gym Class Scheduling &amp; Membership System with Admin, Trainer, and Trainee ro
   - [x] cancel booking `DELETE /bookings/:id`
 
 - **Role: Admin**
-  - [ ] list all bookings `GET /bookings`
+  - [x] list all bookings `GET /bookings`
   - [ ] get a single booking `GET /bookings/:bookingId`
 
 ---

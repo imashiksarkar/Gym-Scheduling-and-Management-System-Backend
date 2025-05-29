@@ -74,7 +74,7 @@ class BookingController {
     this.router.get(
       path,
       requireAuth(),
-      requireRole(UserRole.trainee),
+      requireRole([UserRole.trainee, UserRole.admin]),
       catchAsync(async (req: ReqWithUser, res: Response) => {
         const params = getBookingParamsDto.parse(req.params)
 

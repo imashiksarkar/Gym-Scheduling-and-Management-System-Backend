@@ -41,6 +41,35 @@ describe('Booking Module', async () => {
       expect(bookings.body.success).toBe(true)
       expect(bookings.body.data).toHaveLength(1)
     })
+
+    it('gets a single booking', async () => {
+      const { at: adminAT } = await createAdmin(app)
+
+      const { body: trainer } = await signinAsTrainer(app)
+      const trainerId = trainer.data.id
+
+      const schedule = await createSchedule(app, adminAT, trainerId)
+      const scheduleId = schedule.data.id
+
+      // // create a trainee
+      const { body: trainee, at: traineeAT } = await createTrainee(app)
+
+      const createdBooking = await request(app)
+        .post('/bookings')
+        .set('Cookie', traineeAT)
+        .send({
+          scheduleId,
+        })
+        .expect(201)
+      const bookingId = createdBooking.body.data.id
+
+      const booking = await request(app)
+        .get(`/bookings/${bookingId}`)
+        .set('Cookie', adminAT)
+
+      expect(booking.body.success).toBe(true)
+      expect(booking.body.data.id).toBeDefined()
+    })
   })
 
   describe('Role: Trainer', () => {
