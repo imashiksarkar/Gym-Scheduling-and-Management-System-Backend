@@ -23,6 +23,20 @@ Gym Class Scheduling &amp; Membership System with Admin, Trainer, and Trainee ro
 - Docker Compose
 - Postman
 
+## 📖 Setup Guide
+
+1. Clone the repository: `git clone https://github.com/ashiksarkar/gsms-backend.git`
+2. Install dependencies: `pnpm install`
+3. Run the setup script: `pnpm setup`
+4. Start the server: `pnpm run test`
+
+**_Docker Guide_**
+
+```json
+  $ docker run --env-file .env -p 3000:3000 imashiksarkar/gsms:1.0.0
+  // follow the .env.example
+```
+
 ## 📡 API Endpoints
 
 [Postman Collection](./docs/postman-collection.json)
