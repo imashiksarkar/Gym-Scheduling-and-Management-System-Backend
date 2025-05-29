@@ -15,10 +15,9 @@ export default class AuthService {
       throw response().error(409).message('User already exists').exec()
 
     const hashedPassword = await Hashing.hash(userAttr.password)
-    userAttr.password = hashedPassword
 
     const user = await db.user.create({
-      data: { ...userAttr, role: UserRole.trainer },
+      data: { ...userAttr, password: hashedPassword, role: UserRole.trainer },
       omit: {
         password: true,
       },

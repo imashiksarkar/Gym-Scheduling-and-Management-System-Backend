@@ -59,3 +59,5 @@ export const createAdmin = async (app: Express) => {
     rt: adminRT,
   }
 }
+
+export const genRandomPass = () => faker.internet.password({ length: 12 })

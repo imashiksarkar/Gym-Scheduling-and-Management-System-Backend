@@ -43,5 +43,8 @@ export const signinUserDto = z.object({
     ),
 })
 
+export const createTrainerDto = signupUserDto.omit({ password: true })
+
 export type SignupUserDto = z.infer<typeof signupUserDto>
 export type SigninUserDto = z.infer<typeof signinUserDto>
+export type CreateTrainerDto = z.infer<typeof createTrainerDto>

@@ -4,6 +4,7 @@ import { errorHandler, notFoundHandler } from '@middlewares/index'
 import { cors, db } from '@src/config'
 import { getRelativeTime, response } from '@src/lib'
 import authModule from '@src/modules/auth'
+import trainerModule from '@src/modules/trainer'
 import cookieParser from 'cookie-parser'
 import express, { Request, Response } from 'express'
 import helmet from 'helmet'
@@ -37,7 +38,7 @@ const getAppInstance = async () => {
       res.status(r.code).json(r)
     })
 
-    app.use(authModule)
+    app.use(authModule, trainerModule)
 
     app.use(notFoundHandler())
     app.use(errorHandler())
