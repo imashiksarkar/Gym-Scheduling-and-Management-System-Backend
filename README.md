@@ -25,7 +25,7 @@ Gym Class Scheduling &amp; Membership System with Admin, Trainer, and Trainee ro
 
 - **Role: Admin**
   - [x] create trainer `POST /trainers`
-  - [ ] list all trainers `GET /trainers`
+  - [x] list all trainers `GET /trainers`
   - [ ] delete trainer `DELETE /trainers/:trainerId`
   - [ ] list trainer schedules `DELETE /trainers/:trainerId/schedules`
   - [ ] list all the schedules of a trainer `GET /trainers/:trainerId/schedules`

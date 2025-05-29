@@ -7,7 +7,7 @@ describe('Trainer Module', async () => {
   const app = await getAppInstance()
 
   describe('Role: Admin', () => {
-    it('should be create a trainer', async () => {
+    it('should be able to create a trainer', async () => {
       const { at: adminAT } = await createAdmin(app)
 
       const trainer = await request(app)
@@ -41,6 +41,52 @@ describe('Trainer Module', async () => {
       expect(trainer.body.data).toBeDefined()
       expect(trainer.body.data).toHaveLength(trainersLength)
       expect(trainer.body.data.password).toBeUndefined()
+    })
+
+    it('should be able to delete a trainer', async () => {
+      const { at: adminAT } = await createAdmin(app)
+
+      // create 2 trainers
+      const trainer = await request(app)
+        .post('/trainers')
+        .set('Cookie', adminAT)
+        .send(getUserCred())
+        .expect(201)
+      await request(app)
+        .post('/trainers')
+        .set('Cookie', adminAT)
+        .send(getUserCred())
+        .expect(201)
+
+      // get all trainers
+      const trainers = await request(app)
+        .get('/trainers')
+        .set('Cookie', adminAT)
+        .expect(200)
+
+      expect(trainers.body.success).toBe(true)
+      expect(trainers.body.data).toBeDefined()
+      expect(trainers.body.data).toHaveLength(2)
+      expect(trainers.body.data.password).toBeUndefined()
+
+      const deletedTrainer = await request(app)
+        .delete(`/trainers/${trainer.body.data.id}`)
+        .set('Cookie', adminAT)
+
+      expect(deletedTrainer.body.success).toBe(true)
+      expect(deletedTrainer.body.data).toBeDefined()
+      expect(deletedTrainer.body.data.password).toBeUndefined()
+
+      // get all trainers
+      const trainers2 = await request(app)
+        .get('/trainers')
+        .set('Cookie', adminAT)
+        .expect(200)
+
+      expect(trainers2.body.success).toBe(true)
+      expect(trainers2.body.data).toBeDefined()
+      expect(trainers2.body.data).toHaveLength(1)
+      expect(trainers2.body.data.password).toBeUndefined()
     })
   })
 })

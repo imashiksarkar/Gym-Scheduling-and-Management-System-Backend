@@ -4,7 +4,7 @@ import { catchAsync, response } from '@src/lib'
 import { requireAuth, requireRole } from '@src/middlewares'
 import { genRandomPass } from '@src/test/utils'
 import { Request, Response, Router } from 'express'
-import { createTrainerDto } from '../auth/auth.dtos'
+import { createTrainerDto, deleteTrainerParams } from '../auth/auth.dtos'
 
 class TrainerController {
   private static readonly router = Router()
@@ -49,7 +49,33 @@ class TrainerController {
         const r = response()
           .success(201)
           .data({ ...signedUpTrainer, password: randomPass })
-          .message('Here are all the roles.')
+          .exec()
+        res.status(r.code).json(r)
+      })
+    )
+  }
+
+  private static readonly deleteTrainer = async (
+    path = this.getPath('/:trainerId')
+  ) => {
+    this.router.delete(
+      path,
+      requireAuth(),
+      requireRole(UserRole.admin),
+      catchAsync(async (req: Request, res: Response) => {
+        const params = deleteTrainerParams.parse(req.params)
+
+        const deletedTrainer = await this.authService.deleteTrainer(
+          params.trainerId
+        )
+
+        if (!deletedTrainer)
+          throw response().error(404).message('Trainer not found').exec()
+
+        const r = response()
+          .success(201)
+          .data(deletedTrainer)
+          .message('Trainer deleted successfully.')
           .exec()
         res.status(r.code).json(r)
       })
