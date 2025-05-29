@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker'
 import { UserRole } from '@prisma/client'
+import { db } from '@src/config'
 import { SignupUserDto } from '@src/modules/auth/auth.dtos'
 import authService from '@src/modules/auth/auth.service'
 import { type Express } from 'express'
@@ -85,13 +86,15 @@ export const createSchedule = async (
   trainerId: string,
   trainerCount: number = 1
 ) => {
-  const schedule = await request(app)
-    .post('/schedules')
-    .set('Cookie', adminAT)
-    .send(getSchedulePayload(trainerId))
-    .expect(201)
+  if (trainerCount < 2) {
+    const schedule = await request(app)
+      .post('/schedules')
+      .set('Cookie', adminAT)
+      .send(getSchedulePayload(trainerId))
+      .expect(201)
 
-  if (trainerCount < 2) return schedule.body
+    return schedule.body
+  }
 
   for (const element of Array.from({ length: trainerCount })) {
     await request(app)
@@ -100,6 +103,19 @@ export const createSchedule = async (
       .send(getSchedulePayload(trainerId))
       .expect(201)
   }
+}
+
+export const makeSchedulesUnavailable = async () => {
+  const backTo5Days = Date.now() - 5 * 24 * 60 * 60 * 1000
+  const startsAt = new Date(backTo5Days).toISOString()
+  const endsAt = new Date(backTo5Days + 2 * 60 * 60 * 1000).toISOString() // 5 days + 2 hours
+
+  await db.schedule.updateMany({
+    data: {
+      startsAt,
+      endsAt,
+    },
+  })
 }
 
 export const genRandomPass = () => faker.internet.password({ length: 12 })

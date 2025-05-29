@@ -35,6 +35,7 @@ Gym Class Scheduling &amp; Membership System with Admin, Trainer, and Trainee ro
 ### Schedule Module
 
 - [x] list all schedules `GET /schedules`
+- [ ] list all available schedules `GET /schedules/available`
 - [x] get a single schedule `GET /schedules/:scheduleId`
 
 - **Role: Admin**

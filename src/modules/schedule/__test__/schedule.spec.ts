@@ -4,6 +4,7 @@ import {
   createSchedule,
   createTrainer,
   getSchedulePayload,
+  makeSchedulesUnavailable,
 } from '@src/test/utils'
 import request from 'supertest'
 import { describe, expect, it } from 'vitest'
@@ -41,6 +42,24 @@ describe('Schedule Module', async () => {
     expect(schedules.body.success).toBe(true)
     expect(schedules.body.data).toBeDefined()
     expect(schedules.body.data.id).toBeDefined()
+  })
+
+  it('list all available schedules', async () => {
+    const { at: adminAT } = await createAdmin(app)
+    const { body: trainer } = await createTrainer(app)
+
+    await createSchedule(app, adminAT, trainer.data.id, 3) // create 3 schedules
+    await makeSchedulesUnavailable()
+
+    await createSchedule(app, adminAT, trainer.data.id, 3) // create 3 schedules
+
+    // get all schedules
+    const schedules = await request(app)
+      .get('/schedules/available')
+      .set('Cookie', adminAT)
+
+    expect(schedules.body.success).toBe(true)
+    expect(schedules.body.data).toHaveLength(3)
   })
 
   describe('Role: Admin', () => {

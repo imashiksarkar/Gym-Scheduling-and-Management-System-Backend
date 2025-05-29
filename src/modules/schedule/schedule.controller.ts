@@ -66,6 +66,20 @@ class ScheduleController {
     )
   }
 
+  private static readonly getAvailableSchedules = async (
+    path = this.getPath('/available')
+  ) => {
+    this.router.get(
+      path,
+      catchAsync(async (req: Request, res: Response) => {
+        const schedules = await this.scheduleService.getAvailableSchedules()
+
+        const r = response().success(200).data(schedules).exec()
+        res.status(r.code).json(r)
+      })
+    )
+  }
+
   private static readonly getSchedule = async (
     path = this.getPath('/:scheduleId')
   ) => {

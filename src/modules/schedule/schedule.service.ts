@@ -4,10 +4,24 @@ import { CreateScheduleDto } from './schedule.dtos'
 
 export default class ScheduleService {
   static readonly getSchedules = async () => await db.schedule.findMany()
+
   static readonly getSchedule = async (scheduleId: string) => {
     return await db.schedule.findFirst({
       where: {
         id: scheduleId,
+      },
+    })
+  }
+
+  static readonly getAvailableSchedules = async () => {
+    return await db.schedule.findMany({
+      where: {
+        startsAt: {
+          gte: new Date(),
+        },
+      },
+      orderBy: {
+        startsAt: 'asc',
       },
     })
   }
