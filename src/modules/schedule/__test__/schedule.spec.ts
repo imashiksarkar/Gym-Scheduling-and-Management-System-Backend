@@ -87,7 +87,7 @@ describe('Schedule Module', async () => {
       const { body: trainer } = await createTrainer(app)
 
       // create 5 schedules
-      for await (const element of Array.from({ length: 5 })) {
+      for (const element of Array.from({ length: 5 })) {
         await request(app)
           .post('/schedules')
           .set('Cookie', adminAT)
@@ -133,7 +133,7 @@ describe('Schedule Module', async () => {
       )
     })
 
-    it('delete schedule', async () => {
+    it('deletes schedule', async () => {
       const { at: adminAT } = await createAdmin(app)
       const { body: trainer } = await createTrainer(app)
 

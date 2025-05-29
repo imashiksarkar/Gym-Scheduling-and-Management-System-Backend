@@ -48,8 +48,6 @@ export default class ScheduleService {
       where: {
         startsAt: {
           gte: startDate,
-        },
-        endsAt: {
           lte: endDate,
         },
       },

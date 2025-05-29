@@ -7,7 +7,7 @@ import { SigninUserDto } from '../modules/auth/auth.dtos'
 import authService from '../modules/auth/auth.service'
 
 export const getSchedulePayload = (trainerId: string) => ({
-  startsAt: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
+  startsAt: new Date(Date.now() + 10 * 60 * 1000).toISOString(), // 10 minutes
   title: faker.lorem.word(),
   trainerId,
 })
