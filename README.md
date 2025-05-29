@@ -60,7 +60,7 @@ Gym Class Scheduling &amp; Membership System with Admin, Trainer, and Trainee ro
 
 - **Role: Trainee**
 
-  - [ ] book a schedule `POST /bookings` // max 10 trainee can book per schedule
+  - [x] book a schedule `POST /bookings` // max 10 trainee can book per schedule
 
   ```json
   // input payload

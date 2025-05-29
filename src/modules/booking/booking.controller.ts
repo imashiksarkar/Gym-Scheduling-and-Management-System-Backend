@@ -47,6 +47,22 @@ class BookingController {
       })
     )
   }
+
+  private static readonly getBookings = async (path = this.getPath('/')) => {
+    this.router.get(
+      path,
+      requireAuth(),
+      requireRole(UserRole.trainee),
+      catchAsync(async (req: ReqWithUser, res: Response) => {
+        const userId = req.locals.user.id
+
+        const newBooking = await this.bookingService.getBookings(userId)
+
+        const r = response().success(201).data(newBooking).exec()
+        res.status(r.code).json(r)
+      })
+    )
+  }
 }
 
 export default BookingController.bookingModule as Router

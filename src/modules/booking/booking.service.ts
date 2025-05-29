@@ -29,4 +29,14 @@ export default class BookingService {
 
     return createdBooking
   }
+
+  static readonly getBookings = async (traineeId: string) => {
+    const bookings = await db.booking.findMany({
+      where: {
+        traineeId,
+      },
+    })
+
+    return bookings
+  }
 }
