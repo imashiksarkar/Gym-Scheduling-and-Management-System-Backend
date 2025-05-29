@@ -86,4 +86,14 @@ export default class ScheduleService {
 
     return updatedSchedule
   }
+
+  static readonly deleteSchedule = async (scheduleId: string) => {
+    const deletedSchedule = await db.schedule.delete({
+      where: {
+        id: scheduleId,
+      },
+    })
+
+    return deletedSchedule
+  }
 }

@@ -131,6 +131,29 @@ class ScheduleController {
       })
     )
   }
+
+  private static readonly deleteSchedule = async (
+    path = this.getPath('/:scheduleId')
+  ) => {
+    this.router.delete(
+      path,
+      requireAuth(),
+      requireRole(UserRole.admin),
+      catchAsync(async (req: Request, res: Response) => {
+        const params = scheduleParamsDto.parse(req.params)
+
+        const deletedSchedule = await this.scheduleService.deleteSchedule(
+          params.scheduleId
+        )
+
+        if (!deletedSchedule)
+          throw response().success(404).message('Schedule not found.').exec()
+
+        const r = response().success(200).data(deletedSchedule).exec()
+        res.status(r.code).json(r)
+      })
+    )
+  }
 }
 
 export default ScheduleController.scheduleModule as Router

@@ -132,5 +132,25 @@ describe('Schedule Module', async () => {
         updatedSchedule.body.data.trainerId
       )
     })
+
+    it('delete schedule', async () => {
+      const { at: adminAT } = await createAdmin(app)
+      const { body: trainer } = await createTrainer(app)
+
+      const schedule = await createSchedule(app, adminAT, trainer.data.id)
+
+      const scheduleId = schedule.data.id
+
+      const deletedSchedule = await request(app)
+        .delete(`/schedules/${scheduleId}`)
+        .set('Cookie', adminAT)
+
+      console.log(deletedSchedule.body)
+
+      // expect(schedule.body.success).toBe(true)
+      // expect(schedule.body.data.trainerId).not.toBe(
+      //   deletedSchedule.body.data.trainerId
+      // )
+    })
   })
 })
