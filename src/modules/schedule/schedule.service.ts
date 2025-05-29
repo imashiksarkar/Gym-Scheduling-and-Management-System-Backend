@@ -96,4 +96,29 @@ export default class ScheduleService {
 
     return deletedSchedule
   }
+
+  static readonly isScheduleAvailable = async (scheduleId: string) => {
+    const [schedule, isBookingLimitReached] = await Promise.all([
+      db.schedule.findFirst({
+        where: {
+          id: scheduleId,
+          startsAt: {
+            gte: new Date(),
+          },
+        },
+      }),
+      // this.bookingService.isBookingLimitReached(scheduleId, 10),
+      db.booking.count({
+        where: {
+          scheduleId,
+        },
+      }),
+    ])
+
+    return {
+      isUnavailable: !schedule,
+      isBookingLimitReached: isBookingLimitReached >= 10,
+      // isBookingLimitReached,
+    }
+  }
 }
