@@ -211,4 +211,19 @@ export default class AuthService {
 
     return user
   }
+
+  // necesseary for testing
+  static readonly changeRole = async (userAttr: {
+    email: string
+    role: UserRole
+  }) => {
+    return await db.user.update({
+      where: {
+        email: userAttr.email,
+      },
+      data: {
+        role: userAttr.role,
+      },
+    })
+  }
 }
