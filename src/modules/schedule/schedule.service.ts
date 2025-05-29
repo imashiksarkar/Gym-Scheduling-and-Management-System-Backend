@@ -13,6 +13,14 @@ export default class ScheduleService {
     })
   }
 
+  static readonly getTrainerSchedules = async (trainerId: string) => {
+    return await db.schedule.findMany({
+      where: {
+        trainerId,
+      },
+    })
+  }
+
   static readonly getAvailableSchedules = async () => {
     return await db.schedule.findMany({
       where: {

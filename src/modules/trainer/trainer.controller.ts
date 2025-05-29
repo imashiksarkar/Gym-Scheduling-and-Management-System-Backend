@@ -93,6 +93,28 @@ class TrainerController {
     )
   }
 
+  private static readonly getTrainerSchedules = async (
+    path = this.getPath('/:trainerId/schedules')
+  ) => {
+    this.router.get(
+      path,
+      requireAuth(),
+      catchAsync(async (req: Request, res: Response) => {
+        const params = getTrainerParamsDto.parse(req.params)
+
+        const trainer = await this.authService.getTrainerSchedules(
+          params.trainerId
+        )
+
+        if (!trainer)
+          throw response().error(404).message('Trainer not found!').exec()
+
+        const r = response().success(200).data(trainer).exec()
+        res.status(r.code).json(r)
+      })
+    )
+  }
+
   private static readonly deleteTrainer = async (
     path = this.getPath('/:trainerId')
   ) => {

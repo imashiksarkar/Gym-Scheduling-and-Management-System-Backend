@@ -1,7 +1,13 @@
 import request from 'supertest'
 import { describe, expect, it } from 'vitest'
 import getAppInstance from '../../../app'
-import { createAdmin, createTrainer, getUserCred } from '../../../test/utils'
+import {
+  createAdmin,
+  createSchedule,
+  createTrainee,
+  createTrainer,
+  getUserCred,
+} from '../../../test/utils'
 
 describe('Trainer Module', async () => {
   const app = await getAppInstance()
@@ -30,16 +36,36 @@ describe('Trainer Module', async () => {
   })
 
   it('should be able to a single trainer', async () => {
-    const { at: adminAT } = await createAdmin(app)
+    const { at: traineeAT } = await createTrainee(app)
 
     const createdTrainer = await createTrainer(app)
 
     const trainer = await request(app)
       .get(`/trainers/${createdTrainer.body.data.id}`)
-      .set('Cookie', adminAT)
+      .set('Cookie', traineeAT)
 
     expect(trainer.body.success).toBe(true)
     expect(trainer.body.data.id).toBeDefined()
+  })
+
+  it('list trainer schedules', async () => {
+    const { at: adminAT } = await createAdmin(app)
+    const { at: traineeAT } = await createTrainee(app)
+
+    const {
+      body: {
+        data: { id: trainerId },
+      },
+    } = await createTrainer(app)
+
+    await createSchedule(app, adminAT, trainerId, 4)
+
+    const trainerSchedules = await request(app)
+      .get(`/trainers/${trainerId}/schedules`)
+      .set('Cookie', traineeAT)
+
+    expect(trainerSchedules.body.success).toBe(true)
+    expect(trainerSchedules.body.data).toHaveLength(4)
   })
 
   describe('Role: Admin', () => {

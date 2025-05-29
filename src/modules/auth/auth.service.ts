@@ -2,8 +2,11 @@ import { UserRole } from '@prisma/client'
 import { db } from '../../config'
 import { Hashing, jwt, response } from '../../lib'
 import { SigninUserDto, SignupUserDto } from './auth.dtos'
+import ScheduleService from '../schedule/schedule.service'
 
 export default class AuthService {
+  static readonly scheduleService: typeof ScheduleService = ScheduleService
+
   static readonly createTrainer = async (userAttr: SignupUserDto) => {
     const trainer = await db.user.findFirst({
       where: {
@@ -47,6 +50,12 @@ export default class AuthService {
         role: UserRole.trainer,
       },
     })
+
+    return trainer
+  }
+
+  static readonly getTrainerSchedules = async (trainerId: string) => {
+    const trainer = await this.scheduleService.getTrainerSchedules(trainerId)
 
     return trainer
   }
