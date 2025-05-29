@@ -40,6 +40,17 @@ export default class AuthService {
     return trainers
   }
 
+  static readonly getTrainer = async (trainerId: string) => {
+    const trainer = await db.user.findFirst({
+      where: {
+        id: trainerId,
+        role: UserRole.trainer,
+      },
+    })
+
+    return trainer
+  }
+
   static readonly deleteTrainer = async (trainerId: string) => {
     const deletedTrainer = await db.user.delete({
       where: { id: trainerId, role: UserRole.trainer },

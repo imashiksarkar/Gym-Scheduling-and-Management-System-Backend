@@ -10,7 +10,7 @@ import {
 } from '../../../test/utils'
 import authService from '../auth.service'
 
-describe('Auth Module', async () => {
+describe.only('Auth Module', async () => {
   const app = await getAppInstance()
 
   describe('Role: Trainee', () => {

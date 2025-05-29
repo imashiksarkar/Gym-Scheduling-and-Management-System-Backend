@@ -2,8 +2,12 @@ import { UserRole } from '@prisma/client'
 import { Request, Response, Router } from 'express'
 import { catchAsync, response, genRandomPass } from '../../lib'
 import { requireAuth, requireRole } from '../../middlewares'
-import { createTrainerDto, deleteTrainerParams } from '../auth/auth.dtos'
 import AuthService from '../auth/auth.service'
+import {
+  getTrainerParamsDto,
+  createTrainerDto,
+  deleteTrainerParams,
+} from './trainer.dtos'
 
 class TrainerController {
   private static readonly router = Router()
@@ -54,6 +58,41 @@ class TrainerController {
     )
   }
 
+  private static readonly listAllTrainers = async (
+    path = this.getPath('/')
+  ) => {
+    this.router.get(
+      path,
+      requireAuth(),
+      catchAsync(async (_req: Request, res: Response) => {
+        const trainers = await this.authService.listAllTrainers()
+
+        const r = response().success(200).data(trainers).exec()
+        res.status(r.code).json(r)
+      })
+    )
+  }
+
+  private static readonly getTrainer = async (
+    path = this.getPath('/:trainerId')
+  ) => {
+    this.router.get(
+      path,
+      requireAuth(),
+      catchAsync(async (req: Request, res: Response) => {
+        const params = getTrainerParamsDto.parse(req.params)
+
+        const trainer = await this.authService.getTrainer(params.trainerId)
+
+        if (!trainer)
+          throw response().error(404).message('Trainer not found!').exec()
+
+        const r = response().success(200).data(trainer).exec()
+        res.status(r.code).json(r)
+      })
+    )
+  }
+
   private static readonly deleteTrainer = async (
     path = this.getPath('/:trainerId')
   ) => {
@@ -76,22 +115,6 @@ class TrainerController {
           .data(deletedTrainer)
           .message('Trainer deleted successfully.')
           .exec()
-        res.status(r.code).json(r)
-      })
-    )
-  }
-
-  private static readonly listAllTrainers = async (
-    path = this.getPath('/')
-  ) => {
-    this.router.get(
-      path,
-      requireAuth(),
-      requireRole(UserRole.admin),
-      catchAsync(async (_req: Request, res: Response) => {
-        const trainers = await this.authService.listAllTrainers()
-
-        const r = response().success(200).data(trainers).exec()
         res.status(r.code).json(r)
       })
     )
