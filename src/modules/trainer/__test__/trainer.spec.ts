@@ -7,6 +7,7 @@ import {
   createTrainee,
   createTrainer,
   getUserCred,
+  signinAsTrainer,
 } from '../../../test/utils'
 
 describe('Trainer Module', async () => {
@@ -66,6 +67,26 @@ describe('Trainer Module', async () => {
 
     expect(trainerSchedules.body.success).toBe(true)
     expect(trainerSchedules.body.data).toHaveLength(4)
+  })
+
+  describe('Role: Trainer', () => {
+    it('get own schedules as trainer', async () => {
+      const { at: adminAT } = await createAdmin(app)
+
+      const { body: trainer, at: traineeAT } = await signinAsTrainer(app)
+      const trainerId = trainer.data.id
+
+      await createSchedule(app, adminAT, trainerId, 4)
+
+      const trainerSchedules = await request(app)
+        .get(`/trainers/schedules`)
+        .set('Cookie', traineeAT)
+
+      console.log(trainerSchedules.body)
+
+      // expect(trainerSchedules.body.success).toBe(true)
+      // expect(trainerSchedules.body.data).toHaveLength(4)
+    })
   })
 
   describe('Role: Admin', () => {

@@ -3,7 +3,7 @@ import { UserRole } from '@prisma/client'
 import { type Express } from 'express'
 import request from 'supertest'
 import { db } from '../config'
-import { SignupUserDto } from '../modules/auth/auth.dtos'
+import { SigninUserDto } from '../modules/auth/auth.dtos'
 import authService from '../modules/auth/auth.service'
 
 export const getSchedulePayload = (trainerId: string) => ({
@@ -30,7 +30,7 @@ export const createTrainee = async (app: Express) => {
   }
 }
 
-export const signinUser = async (app: Express, userPayload: SignupUserDto) => {
+export const signinUser = async (app: Express, userPayload: SigninUserDto) => {
   const res = await request(app).post('/auth/signin').send(userPayload)
 
   return {
@@ -77,6 +77,22 @@ export const createTrainer = async (app: Express) => {
 
   return {
     body: trainer.body,
+  }
+}
+
+export const signinAsTrainer = async (app: Express) => {
+  const { body: trainer } = await createTrainer(app)
+
+  const { email, password } = trainer.data
+  const signedInTrainer = await signinUser(app, {
+    email,
+    password,
+  })
+
+  return {
+    body: signedInTrainer.body,
+    at: signedInTrainer.at,
+    rt: signedInTrainer.rt,
   }
 }
 

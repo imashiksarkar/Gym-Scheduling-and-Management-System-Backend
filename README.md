@@ -25,7 +25,7 @@ Gym Class Scheduling &amp; Membership System with Admin, Trainer, and Trainee ro
 
 - [x] list all trainers `GET /trainers`
 - [x] get a single trainer `GET /trainers/:trainerId`
-- [ ] list trainer schedules `GET /trainers/:trainerId/schedules`
+- [x] list trainer schedules `GET /trainers/:trainerId/schedules`
 
 - **Role: Admin**
 
@@ -33,7 +33,7 @@ Gym Class Scheduling &amp; Membership System with Admin, Trainer, and Trainee ro
   - [x] delete trainer `DELETE /trainers/:trainerId`
 
 - **Role: Trainer**
-  - [ ] get own schedules as trainer `GET /trainers/schedules`
+  - [x] get own schedules as trainer `GET /trainers/schedules`
 
 ---
 

@@ -8,6 +8,7 @@ import {
   createTrainerDto,
   deleteTrainerParams,
 } from './trainer.dtos'
+import { ReqWithUser } from 'middlewares/requireAuth.middleware'
 
 class TrainerController {
   private static readonly router = Router()
@@ -73,6 +74,27 @@ class TrainerController {
     )
   }
 
+  private static readonly getTrainerSchedule = async (
+    path = this.getPath('/schedules')
+  ) => {
+    this.router.get(
+      path,
+      requireAuth(),
+      requireRole(UserRole.trainer),
+      catchAsync(async (req: ReqWithUser, res: Response) => {
+        const userId = req.locals.user.id
+
+        const schedules = await this.authService.getTrainerSchedules(userId)
+
+        if (!schedules)
+          throw response().error(404).message('Trainer not found!').exec()
+
+        const r = response().success(200).data(schedules).exec()
+        res.status(r.code).json(r)
+      })
+    )
+  }
+
   private static readonly getTrainer = async (
     path = this.getPath('/:trainerId')
   ) => {
@@ -102,14 +124,14 @@ class TrainerController {
       catchAsync(async (req: Request, res: Response) => {
         const params = getTrainerParamsDto.parse(req.params)
 
-        const trainer = await this.authService.getTrainerSchedules(
+        const schedules = await this.authService.getTrainerSchedules(
           params.trainerId
         )
 
-        if (!trainer)
+        if (!schedules)
           throw response().error(404).message('Trainer not found!').exec()
 
-        const r = response().success(200).data(trainer).exec()
+        const r = response().success(200).data(schedules).exec()
         res.status(r.code).json(r)
       })
     )
