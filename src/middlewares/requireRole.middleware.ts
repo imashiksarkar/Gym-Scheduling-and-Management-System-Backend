@@ -1,7 +1,7 @@
 import { UserRole } from '@prisma/client'
-import { catchAsync, response } from '@src/lib'
-import { IUser, ReqWithUser } from '@src/middlewares/requireAuth.middleware'
 import { NextFunction, Response } from 'express'
+import { catchAsync, response } from '../lib'
+import { IUser, ReqWithUser } from '../middlewares/requireAuth.middleware'
 
 const requireRole = <T extends boolean | void = undefined>(
   role: IUser['role'],

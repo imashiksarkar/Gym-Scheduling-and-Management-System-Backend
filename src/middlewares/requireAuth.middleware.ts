@@ -1,6 +1,6 @@
-import { NextFunction, Request, Response } from 'express'
-import { catchAsync, jwt, response } from '@src/lib'
 import { UserRole } from '@prisma/client'
+import { NextFunction, Request, Response } from 'express'
+import { catchAsync, jwt, response } from '../lib'
 
 export interface IUser {
   id: string

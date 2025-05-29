@@ -1,5 +1,5 @@
-import getAppInstance from '@src/app'
-import { validatedEnv } from '@lib/index'
+import getAppInstance from './src/app'
+import { validatedEnv } from './src/lib'
 
 const PORT = validatedEnv.PORT || 3000
 

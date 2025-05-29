@@ -1,10 +1,10 @@
-import AuthService from '@modules/auth/auth.service'
 import { UserRole } from '@prisma/client'
-import { catchAsync, response } from '@src/lib'
-import { requireAuth, requireRole } from '@src/middlewares'
-import { genRandomPass } from '@src/test/utils'
 import { Request, Response, Router } from 'express'
+import { catchAsync, response } from '../../lib'
+import { requireAuth, requireRole } from '../../middlewares'
+import { genRandomPass } from '../../test/utils'
 import { createTrainerDto, deleteTrainerParams } from '../auth/auth.dtos'
+import AuthService from '../auth/auth.service'
 
 class TrainerController {
   private static readonly router = Router()

@@ -1,13 +1,13 @@
 import { UserRole } from '@prisma/client'
-import getAppInstance from '@src/app'
+import request from 'supertest'
+import { describe, expect, it } from 'vitest'
+import getAppInstance from '../../../app'
 import {
   createAdmin,
   createTrainee,
   getUserCred,
   signinUser,
-} from '@src/test/utils'
-import request from 'supertest'
-import { describe, expect, it } from 'vitest'
+} from '../../../test/utils'
 import authService from '../auth.service'
 
 describe('auth', async () => {

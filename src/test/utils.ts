@@ -1,10 +1,10 @@
 import { faker } from '@faker-js/faker'
 import { UserRole } from '@prisma/client'
-import { db } from '@src/config'
-import { SignupUserDto } from '@src/modules/auth/auth.dtos'
-import authService from '@src/modules/auth/auth.service'
 import { type Express } from 'express'
 import request from 'supertest'
+import { db } from '../config'
+import { SignupUserDto } from '../modules/auth/auth.dtos'
+import authService from '../modules/auth/auth.service'
 
 export const getSchedulePayload = (trainerId: string) => ({
   startsAt: new Date(Date.now() + 10 * 60 * 1000).toISOString(),

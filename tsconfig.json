@@ -9,13 +9,6 @@
     "strict": true,
     "skipLibCheck": true,
     "baseUrl": "./src",
-    "paths": {
-      "@src/*": ["*"],
-      "@lib/*": ["lib/*"],
-      "@config/*": ["config/*"],
-      "@modules/*": ["modules/*"],
-      "@middlewares/*": ["middlewares/*"]
-    },
     "moduleDetection": "force",
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true

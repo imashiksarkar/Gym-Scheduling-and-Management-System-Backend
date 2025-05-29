@@ -1,5 +1,5 @@
-import { validatedEnv } from '@src/lib'
 import pino from 'pino'
+import { validatedEnv } from '../lib'
 
 const pinoLogger = pino({
   transport: {

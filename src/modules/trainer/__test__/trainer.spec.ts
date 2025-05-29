@@ -1,7 +1,7 @@
-import getAppInstance from '@src/app'
-import { createAdmin, getUserCred } from '@src/test/utils'
 import request from 'supertest'
 import { describe, expect, it } from 'vitest'
+import getAppInstance from '../../../app'
+import { createAdmin, getUserCred } from '../../../test/utils'
 
 describe('Trainer Module', async () => {
   const app = await getAppInstance()

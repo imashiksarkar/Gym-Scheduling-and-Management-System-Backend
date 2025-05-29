@@ -1,10 +1,10 @@
-import { catchAsync, jwt, response, validatedEnv } from '@src/lib'
-import { Request, Response, Router } from 'express'
-import { changeUserRoleDto, signinUserDto, signupUserDto } from './auth.dtos'
-import AuthService from './auth.service'
-import { requireRole, requireAuth } from '@src/middlewares'
-import { ReqWithUser } from '@src/middlewares/requireAuth.middleware'
 import { UserRole } from '@prisma/client'
+import { Request, Response, Router } from 'express'
+import { catchAsync, jwt, response, validatedEnv } from '../../lib'
+import { requireAuth, requireRole } from '../../middlewares'
+import { ReqWithUser } from '../../middlewares/requireAuth.middleware'
+import { signinUserDto, signupUserDto } from './auth.dtos'
+import AuthService from './auth.service'
 
 class AuthController {
   private static readonly router = Router()

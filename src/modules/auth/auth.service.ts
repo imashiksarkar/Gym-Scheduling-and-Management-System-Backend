@@ -1,6 +1,6 @@
 import { UserRole } from '@prisma/client'
-import { db } from '@src/config'
-import { Hashing, jwt, response } from '@src/lib'
+import { db } from '../../config'
+import { Hashing, jwt, response } from '../../lib'
 import { SigninUserDto, SignupUserDto } from './auth.dtos'
 
 export default class AuthService {

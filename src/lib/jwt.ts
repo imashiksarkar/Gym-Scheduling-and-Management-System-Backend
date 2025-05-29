@@ -1,10 +1,10 @@
+import { UserRole } from '@prisma/client'
 import jwt, {
   JsonWebTokenError,
   NotBeforeError,
   TokenExpiredError,
 } from 'jsonwebtoken'
 import validatedEnv from './validatedEnv'
-import { UserRole } from '@prisma/client'
 
 export default class JWT {
   static get accessTokenValidityMs() {

@@ -1,5 +1,5 @@
-import { db } from '@src/config'
 import { beforeEach } from 'vitest'
+import { db } from '../config'
 
 beforeEach(async () => {
   await db.user.deleteMany()

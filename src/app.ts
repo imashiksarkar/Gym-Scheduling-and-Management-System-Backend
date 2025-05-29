@@ -1,14 +1,14 @@
-import '@lib/processListeners'
-import '@lib/validatedEnv'
-import { errorHandler, notFoundHandler } from '@middlewares/index'
-import { cors, db } from '@src/config'
-import { getRelativeTime, response } from '@src/lib'
-import authModule from '@src/modules/auth'
-import trainerModule from '@src/modules/trainer'
-import scheduleModule from '@src/modules/schedule'
 import cookieParser from 'cookie-parser'
 import express, { Request, Response } from 'express'
 import helmet from 'helmet'
+import { cors, db } from './config'
+import { getRelativeTime, response } from './lib'
+import './lib/processListeners'
+import './lib/validatedEnv'
+import { errorHandler, notFoundHandler } from './middlewares'
+import authModule from './modules/auth'
+import scheduleModule from './modules/schedule'
+import trainerModule from './modules/trainer'
 
 const getAppInstance = async () => {
   try {

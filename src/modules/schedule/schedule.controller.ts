@@ -1,9 +1,9 @@
-import { catchAsync, response } from '@src/lib'
-import { Request, Response, Router } from 'express'
-import ScheduleService from './schedule.service'
-import { createScheduleDto, scheduleParamsDto } from './schedule.dtos'
-import { requireAuth, requireRole } from '@src/middlewares'
 import { UserRole } from '@prisma/client'
+import { Request, Response, Router } from 'express'
+import { catchAsync, response } from '../../lib'
+import { requireAuth, requireRole } from '../../middlewares'
+import { createScheduleDto, scheduleParamsDto } from './schedule.dtos'
+import ScheduleService from './schedule.service'
 
 class ScheduleController {
   private static readonly router = Router()

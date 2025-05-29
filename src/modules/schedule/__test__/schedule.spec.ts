@@ -1,13 +1,13 @@
-import getAppInstance from '@src/app'
+import request from 'supertest'
+import { describe, expect, it } from 'vitest'
+import getAppInstance from '../../../app'
 import {
   createAdmin,
   createSchedule,
   createTrainer,
   getSchedulePayload,
   makeSchedulesUnavailable,
-} from '@src/test/utils'
-import request from 'supertest'
-import { describe, expect, it } from 'vitest'
+} from '../../../test/utils'
 
 describe('Schedule Module', async () => {
   const app = await getAppInstance()

@@ -1,5 +1,5 @@
-import { db } from '@src/config'
-import { response } from '@src/lib'
+import { db } from '../../config'
+import { response } from '../../lib'
 import { CreateScheduleDto } from './schedule.dtos'
 
 export default class ScheduleService {

@@ -1,7 +1,7 @@
-import { isPrismaError, jwt, serializePrismaError } from '@src/lib'
-import response, { Res } from '@src/lib/response'
 import { ErrorRequestHandler, NextFunction, Request, Response } from 'express'
 import { ZodError } from 'zod'
+import { isPrismaError, jwt, serializePrismaError } from '../lib'
+import response, { Res } from '../lib/response'
 
 const serializeZodError = (err: ZodError) => {
   return Object.values(err.flatten().fieldErrors).flat().join('\n')

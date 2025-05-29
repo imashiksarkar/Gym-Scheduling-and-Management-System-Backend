@@ -1,3 +1,4 @@
-export { default as db } from '@config/db'
-export { default as logger } from '@config/logger'
-export { default as cors } from '@config/cors'
+export { default as cors } from './cors'
+export { default as db } from './db'
+export { default as logger } from './logger'
+

@@ -1,4 +1,4 @@
-import { db, logger } from '@src/config'
+import { db, logger } from '../config'
 
 const gracefulShutdown = async (reason: string, error?: unknown) => {
   logger.error({ reason, error }, 'Shutting down application')
