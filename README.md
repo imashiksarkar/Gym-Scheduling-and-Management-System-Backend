@@ -4,33 +4,84 @@ Gym Class Scheduling &amp; Membership System with Admin, Trainer, and Trainee ro
 
 ## 📡 API Endpoints
 
+---
+
 ### Auth Module
 
-**Role: Trainee**
-trainee can signup `POST /auth/signup`
-trainee can signin `POST /auth/signin`
+- [x] trainee can signup `POST /auth/signup`
+- [x] trainee can signin `POST /auth/signin`
+
+- [x] fetch own profile `GET /auth/profile`
+
+- [x] refresh token `GET /auth/refresh`
+
+- [x] signout `DELETE /auth/signout`
+
+- [x] fetch all allowed roles `GET /auth/roles`
+
+- **Role: Admin**
+
+  - [x] fetch all users `GET /auth/users`
+
+  - [x] fetch a single user `GET /auth/users/userId`
+
+---
 
 ### Trainer Module
 
-**Role: Admin**
-create trainer `POST /trainers`
-list all trainers `GET /trainers`
-delete trainer `DELETE /trainers/:trainerId`
-list trainer schedules `DELETE /trainers/:trainerId/schedules`
-list all the schedules of a trainer `GET /trainers/:trainerId/schedules`
+- **Role: Admin**
+  create trainer `POST /trainers`
+  list all trainers `GET /trainers`
+  delete trainer `DELETE /trainers/:trainerId`
+  list trainer schedules `DELETE /trainers/:trainerId/schedules`
+  list all the schedules of a trainer `GET /trainers/:trainerId/schedules`
+
+---
 
 ### Schedule Module
 
-**Role: Trainee**
-get available schedules `GET /schedules`
-book schedule `POST /schedules/:id`
-get own schedule `GET /schedules/me`
-cancel schedule `DELETE /schedules/:id`
+- **Role: Trainee**
 
-**Role: Trainer**
-get own schedule `GET /schedules?as=trainer`
+  - [ ] get available schedules `GET /schedules`
+  - [ ] book schedule `POST /schedules/:id`
+  - [ ] get own schedule `GET /schedules/me`
+  - [ ] cancel schedule `DELETE /schedules/:id`
 
-**Role: Admin**
-create schedule `POST /schedules`
-list all schedules `GET /schedules`
-assign trainer to schedule `PUT /schedules/:id`
+- **Role: Trainer**
+
+  get own schedule `GET /schedules?as=trainer`
+
+- **Role: Admin**
+
+  create schedule `POST /schedules`
+  list all schedules `GET /schedules`
+  assign trainer to schedule `PUT /schedules/:id`
+
+---
+
+## Response Structures
+
+```json
+// success output
+{
+  "success": true,
+  "code": 200,
+  "status": "Ok",
+  "data": {}, // object or array
+  "message": [""], // optional
+}
+
+// error output
+{
+  "success": false,
+  "code": 401,
+  "status": "Unauthorized",
+  "error": {// optional
+    "fields": {// optional
+      "email": ["Email is required"], // optional
+      "password": ["Password is required"]
+      },
+    "message": ["Invalid credentials"] // optional
+  }
+}
+```

@@ -121,7 +121,7 @@ class AuthController {
     this.router.patch(
       path,
       requireAuth(),
-      requireRole(UserRole.trainer),
+      requireRole(UserRole.admin),
       catchAsync(async (req: Request, res: Response) => {
         const body = changeUserRoleDto.parse(req.body)
 
@@ -138,7 +138,7 @@ class AuthController {
   }
 
   private static readonly refresh = async (path = this.getPath('/refresh')) => {
-    this.router.post(
+    this.router.get(
       path,
       catchAsync(async (req: Request, res: Response) => {
         const refreshToken: string = req.cookies['refreshToken'] ?? ''

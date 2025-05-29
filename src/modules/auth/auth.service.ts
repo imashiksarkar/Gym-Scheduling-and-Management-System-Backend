@@ -64,7 +64,7 @@ export default class AuthService {
     })
 
     if (!existingUser)
-      throw response().error(404).message('User not found').exec()
+      throw response().error(401).message('Invalid credentials').exec()
 
     const isValidPassword = await Hashing.verify(
       userAttr.password,

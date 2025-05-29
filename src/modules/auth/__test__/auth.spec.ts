@@ -1,8 +1,14 @@
 import { UserRole } from '@prisma/client'
 import getAppInstance from '@src/app'
-import { createTrainee, getUserCred } from '@src/test/utils'
+import {
+  createAdmin,
+  createTrainee,
+  getUserCred,
+  signinUser,
+} from '@src/test/utils'
 import request from 'supertest'
 import { describe, expect, it } from 'vitest'
+import authService from '../auth.service'
 
 describe('auth', async () => {
   const app = await getAppInstance()
@@ -68,7 +74,7 @@ describe('auth', async () => {
     it('lets user to refresh token', async () => {
       const { rt, at } = await createTrainee(app)
 
-      const res = await request(app).post('/auth/refresh').set('Cookie', rt)
+      const res = await request(app).get('/auth/refresh').set('Cookie', rt)
       const [newAt, newRt] = res.headers['set-cookie']
 
       expect(res.body.success).toBe(true)
@@ -90,66 +96,46 @@ describe('auth', async () => {
     })
   })
 
-  // describe('Role: Admin', () => {
-  //   it('should be able to fetch all users', async () => {
-  //     // signup a user
-  //     const user = await request(app)
-  //       .post('/auth/signup')
-  //       .send(pokominCred)
-  //       .expect(201)
+  describe('Role: Admin', () => {
+    it('should be able to fetch all users', async () => {
+      // signup a user
+      const { userPayload } = await createTrainee(app)
 
-  //     await request(app)
-  //       .post('/auth/signup')
-  //       .send({ ...pokominCred, email: 'pokimin2@gmail.com' })
-  //       .expect(201)
+      await request(app)
+        .post('/auth/signup')
+        .send({ ...userPayload, email: 'pokimin2@gmail.com' })
+        .expect(201)
 
-  //     // make the user admin using service
-  //     await authService.changeRole({
-  //       email: user.body.data.email,
-  //       role: UserRole.admin,
-  //     })
+      // make the user admin using service
+      await authService.changeRole({
+        email: userPayload.email!,
+        role: UserRole.admin,
+      })
 
-  //     // signin as admin
-  //     const admin = await request(app)
-  //       .post('/auth/signin')
-  //       .send(pokominCred)
-  //       .expect(200)
-  //     const [adminAT] = admin.headers['set-cookie']
+      // signin as admin
+      delete userPayload.name
+      const { at: adminAT } = await signinUser(
+        app,
+        userPayload as Required<typeof userPayload>
+      )
 
-  //     // fetch all users as admin
-  //     const users = await request(app).get('/auth/users').set('Cookie', adminAT)
+      // fetch all users as admin
+      const users = await request(app).get('/auth/users').set('Cookie', adminAT)
 
-  //     expect(users.body.success).toBe(true)
-  //     expect(users.body.data.length).toBe(2)
-  //   })
+      expect(users.body.success).toBe(true)
+      expect(users.body.data.length).toBe(2)
+    })
 
-  //   it('should be able to fetch a single user', async () => {
-  //     // signup a user
-  //     const user = await request(app)
-  //       .post('/auth/signup')
-  //       .send(pokominCred)
-  //       .expect(201)
+    it('should be able to fetch a single user', async () => {
+      const { body, at: adminAT } = await createAdmin(app)
 
-  //     // make the user admin using service
-  //     await authService.changeRole({
-  //       email: user.body.data.email,
-  //       role: UserRole.admin,
-  //     })
+      // fetch all users as admin
+      const users = await request(app)
+        .get(`/auth/users/${body.data.id}`)
+        .set('Cookie', adminAT)
 
-  //     // signin as admin
-  //     const admin = await request(app)
-  //       .post('/auth/signin')
-  //       .send(pokominCred)
-  //       .expect(200)
-  //     const [adminAT] = admin.headers['set-cookie']
-
-  //     // fetch all users as admin
-  //     const users = await request(app)
-  //       .get(`/auth/users/${user.body.data.id}`)
-  //       .set('Cookie', adminAT)
-
-  //     expect(users.body.success).toBe(true)
-  //     expect(users.body.data.id).toBeDefined()
-  //   })
-  // })
+      expect(users.body.success).toBe(true)
+      expect(users.body.data.id).toBeDefined()
+    })
+  })
 })
