@@ -65,7 +65,7 @@ describe('Booking Module', async () => {
       expect(bookings.body.data).toHaveLength(1)
     })
 
-    it('gets a single booking`', async () => {
+    it('gets a single booking', async () => {
       const { at: adminAT } = await createAdmin(app)
 
       const { body: trainer } = await signinAsTrainer(app)
@@ -92,6 +92,35 @@ describe('Booking Module', async () => {
 
       expect(bookings.body.success).toBe(true)
       expect(bookings.body.data.id).toBeDefined()
+    })
+
+    it('can cancel booking', async () => {
+      const { at: adminAT } = await createAdmin(app)
+
+      const { body: trainer } = await signinAsTrainer(app)
+      const trainerId = trainer.data.id
+
+      const schedule = await createSchedule(app, adminAT, trainerId)
+      const scheduleId = schedule.data.id
+
+      // // create a trainee
+      const { body: trainee, at: traineeAT } = await createTrainee(app)
+
+      const createdBooking = await request(app)
+        .post('/bookings')
+        .set('Cookie', traineeAT)
+        .send({
+          scheduleId,
+        })
+        .expect(201)
+      const bookingId = createdBooking.body.data.id
+
+      const calceledBooking = await request(app)
+        .delete(`/bookings/${bookingId}`)
+        .set('Cookie', traineeAT)
+
+      expect(calceledBooking.body.success).toBe(true)
+      expect(calceledBooking.body.data.id).toBeDefined()
     })
   })
 })

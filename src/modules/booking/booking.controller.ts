@@ -84,6 +84,33 @@ class BookingController {
       })
     )
   }
+
+  private static readonly cancelBooking = async (
+    path = this.getPath('/:bookingId')
+  ) => {
+    this.router.delete(
+      path,
+      requireAuth(),
+      requireRole(UserRole.trainee),
+      catchAsync(async (req: ReqWithUser, res: Response) => {
+        const params = getBookingParamsDto.parse(req.params)
+
+        const canceledBooking = await this.bookingService.cancelBooking(
+          params.bookingId
+        )
+
+        if (!canceledBooking)
+          throw response().error(404).message('Booking not found!').exec()
+
+        const r = response()
+          .success(200)
+          .data(canceledBooking)
+          .message('Booking canceled!')
+          .exec()
+        res.status(r.code).json(r)
+      })
+    )
+  }
 }
 
 export default BookingController.bookingModule as Router

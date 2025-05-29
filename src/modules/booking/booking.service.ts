@@ -49,4 +49,14 @@ export default class BookingService {
 
     return booking
   }
+
+  static readonly cancelBooking = async (bookingId: string) => {
+    const deletedBooking = await db.booking.delete({
+      where: {
+        id: bookingId,
+      },
+    })
+
+    return deletedBooking
+  }
 }
