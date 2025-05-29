@@ -32,9 +32,9 @@ Gym Class Scheduling &amp; Membership System with Admin, Trainer, and Trainee ro
 
 **_Docker Guide_**
 
-```json
+```bash
   $ docker run --env-file .env -p 3000:3000 imashiksarkar/gsms:1.0.0
-  // follow the .env.example
+  # follow the .env.example
 ```
 
 ## 📡 API Endpoints
