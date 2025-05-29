@@ -1,4 +1,3 @@
-import { UserRole } from '@prisma/client'
 import { z } from 'zod'
 
 export const signupUserDto = z.object({
@@ -44,18 +43,5 @@ export const signinUserDto = z.object({
     ),
 })
 
-export const changeUserRoleDto = z.object(
-  {
-    email: z.string().email(),
-    role: z.nativeEnum(UserRole).refine((role) => role.length > 0, {
-      message: 'Role must not be empty',
-    }),
-  },
-  {
-    message: 'Request body required!',
-  }
-)
-
 export type SignupUserDto = z.infer<typeof signupUserDto>
 export type SigninUserDto = z.infer<typeof signinUserDto>
-export type ChangeUserRoleDto = z.infer<typeof changeUserRoleDto>

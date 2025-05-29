@@ -115,28 +115,6 @@ class AuthController {
     )
   }
 
-  private static readonly changeRole = async (
-    path = this.getPath('/roles')
-  ) => {
-    this.router.patch(
-      path,
-      requireAuth(),
-      requireRole(UserRole.admin),
-      catchAsync(async (req: Request, res: Response) => {
-        const body = changeUserRoleDto.parse(req.body)
-
-        const user = await this.authService.changeRole(body)
-
-        const r = response()
-          .success(200)
-          .message('Role changed successfully')
-          .data(user)
-          .exec()
-        res.status(r.code).json(r)
-      })
-    )
-  }
-
   private static readonly refresh = async (path = this.getPath('/refresh')) => {
     this.router.get(
       path,
