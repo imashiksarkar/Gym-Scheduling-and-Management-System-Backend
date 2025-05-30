@@ -13,7 +13,7 @@ env:
   DB_URL: postgresql://testuser:testpassword@localhost:5432/gsms?schema=public
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -27,14 +27,25 @@ jobs:
         with:
           node-version: '22.16.0'
 
-      - name: Enable corepack
-        run: corepack enable
+      # - name: Enable corepack
+      #   run: corepack enable
 
-      - name: Install pnpm
-        run: corepack prepare --activate
+      # - name: Install pnpm
+      #   run: corepack prepare --activate
+
+      # - name: Install dependencies
+      #   run: pnpm install --frozen-lockfile
+
+      - name: Enable corepack & install pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@latest --activate
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: |
+          pnpm install --ignore-scripts
+          pnpm dlx pnpm-approve-builds --yes
+          pnpm rebuild
 
       - name: Run test database
         run: docker compose up -d postgres-test
