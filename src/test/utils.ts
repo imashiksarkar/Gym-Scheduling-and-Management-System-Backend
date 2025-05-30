@@ -8,7 +8,7 @@ import authService from '../modules/auth/auth.service'
 
 export const getSchedulePayload = (trainerId: string) => ({
   startsAt: new Date(Date.now() + 10 * 60 * 1000).toISOString(), // 10 minutes
-  title: faker.lorem.word(),
+  title: faker.lorem.word({ length: { min: 5, max: 10 } }),
   trainerId,
 })
 
@@ -22,6 +22,9 @@ export const createTrainee = async (app: Express) => {
   const userPayload: Partial<ReturnType<typeof getUserCred>> = getUserCred()
   const res = await request(app).post('/auth/signup').send(userPayload)
 
+  if (res.body.success === false)
+    throw new Error(res.body.error.message.join('\n'))
+
   return {
     userPayload,
     body: res.body,
@@ -32,12 +35,15 @@ export const createTrainee = async (app: Express) => {
 
 export const signinUser = async (app: Express, userPayload: SigninUserDto) => {
   const res = await request(app).post('/auth/signin').send(userPayload)
+  if (res.body.success === false)
+    throw new Error(res.body.error.message.join('\n'))
+
+  const [at, rt] = res.header['set-cookie']
 
   return {
-    userPayload,
     body: res.body,
-    at: res.headers['set-cookie'][0],
-    rt: res.headers['set-cookie'][1],
+    at,
+    rt,
   }
 }
 
@@ -52,10 +58,10 @@ export const createAdmin = async (app: Express) => {
   })
 
   // signin as admin
-  const admin = await request(app)
-    .post('/auth/signin')
-    .send(userPayload)
-    .expect(200)
+  const admin = await request(app).post('/auth/signin').send(userPayload)
+
+  if (admin.body.success === false)
+    throw new Error(admin.body.error.message.join('\n'))
 
   const [adminAT, adminRT] = admin.headers['set-cookie']
 
@@ -75,6 +81,9 @@ export const createTrainer = async (app: Express) => {
     .set('Cookie', adminAT)
     .send(getUserCred())
 
+  if (trainer.body.success === false)
+    throw new Error(trainer.body.error.message.join('\n'))
+
   return {
     body: trainer.body,
   }
@@ -84,6 +93,7 @@ export const signinAsTrainer = async (app: Express) => {
   const { body: trainer } = await createTrainer(app)
 
   const { email, password } = trainer.data
+
   const signedInTrainer = await signinUser(app, {
     email,
     password,
@@ -107,18 +117,26 @@ export const createSchedule = async (
       .post('/schedules')
       .set('Cookie', adminAT)
       .send(getSchedulePayload(trainerId))
-      .expect(201)
+
+    if (schedule.body.success === false)
+      throw new Error(schedule.body.error.message.join('\n'))
 
     return schedule.body
   }
 
-  for (const element of Array.from({ length: trainerCount })) {
-    await request(app)
-      .post('/schedules')
-      .set('Cookie', adminAT)
-      .send(getSchedulePayload(trainerId))
-      .expect(201)
-  }
+  const schedulesRes = await Promise.all(
+    Array.from({ length: trainerCount }).map(() => {
+      return request(app)
+        .post('/schedules')
+        .set('Cookie', adminAT)
+        .send(getSchedulePayload(trainerId))
+    })
+  )
+
+  schedulesRes.forEach((schedule) => {
+    if (schedule.body.success === false)
+      throw new Error(schedule.body.error.message.join('\n'))
+  })
 }
 
 export const makeSchedulesUnavailable = async () => {

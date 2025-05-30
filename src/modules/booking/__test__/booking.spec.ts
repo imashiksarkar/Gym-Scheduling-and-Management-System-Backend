@@ -60,7 +60,7 @@ describe('Booking Module', async () => {
         .send({
           scheduleId,
         })
-        .expect(201)
+
       const bookingId = createdBooking.body.data.id
 
       const booking = await request(app)

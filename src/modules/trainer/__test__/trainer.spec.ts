@@ -73,19 +73,17 @@ describe('Trainer Module', async () => {
     it('get own schedules as trainer', async () => {
       const { at: adminAT } = await createAdmin(app)
 
-      const { body: trainer, at: traineeAT } = await signinAsTrainer(app)
+      const { body: trainer, at: trainerAT } = await signinAsTrainer(app)
       const trainerId = trainer.data.id
 
       await createSchedule(app, adminAT, trainerId, 4)
 
       const trainerSchedules = await request(app)
         .get(`/trainers/schedules`)
-        .set('Cookie', traineeAT)
+        .set('Cookie', trainerAT)
 
-      console.log(trainerSchedules.body)
-
-      // expect(trainerSchedules.body.success).toBe(true)
-      // expect(trainerSchedules.body.data).toHaveLength(4)
+      expect(trainerSchedules.body.success).toBe(true)
+      expect(trainerSchedules.body.data).toHaveLength(4)
     })
   })
 
