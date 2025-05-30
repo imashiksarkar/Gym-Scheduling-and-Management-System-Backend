@@ -1,6 +1,8 @@
-name: Test
+name: App Test
 
-on: [workflow_dispatch]
+on:
+  release:
+    types: [created]
 
 env:
   NODE_ENV: test
@@ -16,6 +18,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Extract release version
+        run: echo "RELEASE_TAG=$(echo ${GITHUB_REF#refs/tags/} | sed 's/^[^0-9]*//')" >> $GITHUB_ENV
 
       - name: Setup node
         uses: actions/setup-node@v4
@@ -57,6 +62,20 @@ jobs:
 
       - name: Prisma client migrate
         run: pnpm run db:push
-        
+
       - name: Run tests
         run: pnpm run test:run
+
+      - name: Trigger Docker Build Workflow with Inputs
+        if: success()
+        run: |
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/${{ github.repository }}/actions/workflows/docker-build.yml/dispatches \
+            -d '{
+              "ref": "main",
+              "inputs": {
+                "release_tag": ${{ env.RELEASE_TAG }},
+              }
+            }'
