@@ -1,4 +1,4 @@
-import { logger } from 'config'
+import { logger } from '../config'
 import cron from 'node-cron'
 import validatedEnv from './validatedEnv'
 
