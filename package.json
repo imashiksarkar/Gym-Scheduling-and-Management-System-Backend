@@ -1,6 +1,7 @@
 {
   "name": "gsms-backend",
   "version": "1.0.0",
+  "pacageManager": "pnpm@10.11.0",
   "description": "Gym Class Scheduling & Membership System with Admin, Trainer, and Trainee roles.",
   "main": "dist/server.js",
   "scripts": {

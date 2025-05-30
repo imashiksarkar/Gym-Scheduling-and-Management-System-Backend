@@ -1,29 +1,54 @@
-FROM node:22.16.0-alpine AS builder
+# Stage: Install dependencies and generate Prisma client
+FROM node:22.16.0-alpine AS deps
 
-WORKDIR /app
+RUN corepack enable
 
-COPY package*.json ./
-RUN npm install -g pnpm
+WORKDIR /usr/app
+
+COPY package.json pnpm-lock.yaml ./
+
+RUN corepack prepare --activate 
+
 RUN pnpm install
+
+COPY prisma ./prisma
+
+RUN npx prisma generate
+
+
+# Stage: Remove dev dependencies
+FROM deps AS prod-deps
+
+WORKDIR /usr/app
+
+RUN pnpm prune --prod
+
+
+# Stage: Build the application
+FROM deps AS builder
+
+WORKDIR /usr/app
 
 COPY . .
 
-RUN npx prisma generate
-RUN npm run build
+RUN pnpm build
 
-FROM node:22.16.0-alpine
 
-WORKDIR /app
+# Stage: Run the application
+FROM node:22.16.0-alpine AS runner
 
-COPY --from=builder /app/package*.json ./
+RUN corepack enable
 
-RUN npm install -g pnpm
-RUN pnpm install --prod
+WORKDIR /usr/app
 
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/prisma ./prisma
+COPY --from=prod-deps /usr/app/node_modules ./node_modules
+COPY --from=deps /usr/app/package.json ./package.json
+COPY --from=builder /usr/app/prisma ./prisma
+COPY --from=builder /usr/app/dist ./dist
 
-RUN npx prisma generate
+RUN corepack prepare --activate
+
+ENV NODE_ENV=production
 
 EXPOSE 3000
 
