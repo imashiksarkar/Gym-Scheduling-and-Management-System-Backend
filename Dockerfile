@@ -9,7 +9,7 @@ RUN corepack enable \
   && corepack prepare --activate
 
 RUN pnpm install --ignore-scripts \
-  && pnpm approve-builds --yes \
+  && pnpm approve-builds --auto-approve \
   && pnpm rebuild
 
 COPY prisma ./prisma
