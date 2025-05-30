@@ -27,13 +27,23 @@ Gym Class Scheduling &amp; Membership System with Admin, Trainer, and Trainee ro
 
 1. Clone the repository: `git clone https://github.com/ashiksarkar/gsms-backend.git`
 2. Install dependencies: `pnpm install`
-3. Run the setup script: `pnpm setup`
-4. Start the server: `pnpm run test`
+3. Put DB_URL in `.env` that is running
+4. Start the server: `pnpm run dev`
 
 **_Docker Guide_**
 
 ```bash
-  $ docker run --env-file .env -p 3000:3000 imashiksarkar/gsms:1.0.0
+  # for dev
+  $ pnpm i
+  - start docker
+  $ pnpm setup # run a test database in your docker also start prisma studio
+  - put DB_URL in .env
+  $ pnpm run dev
+  - or
+  $ pnpm run test # for tdd
+
+  # for prod
+  $ docker run --env-file .env -p 3000:3000 imashiksarkar/gsms:1.1.0
   # follow the .env.example
 ```
 
@@ -123,6 +133,77 @@ Gym Class Scheduling &amp; Membership System with Admin, Trainer, and Trainee ro
   - [x] get a single booking `GET /bookings/:bookingId`
 
 ---
+
+## Schemas
+
+```javascript
+enum UserRole {
+  admin
+  trainer
+  trainee
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String   @db.VarChar(120)
+  email     String   @unique @db.VarChar(100)
+  password  String   @db.VarChar(300)
+  role      UserRole @default(trainee)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  tokens   Token[]
+  Schedule Schedule[]
+  Booking  Booking[]
+
+  @@map("users")
+}
+
+model Token {
+  id        String    @id @default(uuid())
+  userId    String    @map("user_id")
+  token     String    @unique
+  expiresAt DateTime  @map("expires_at")
+  revokedAt DateTime? @map("revoked_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([token], name: "token_idx")
+  @@index([userId], name: "user_id_idx")
+  @@map("tokens")
+}
+
+model Schedule {
+  id        String   @id @default(uuid())
+  title     String   @db.VarChar(120)
+  startsAt  DateTime @map("starts_at")
+  endsAt    DateTime @map("ends_at")
+  trainerId String   @map("trainer_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  trainer User      @relation(fields: [trainerId], references: [id], onDelete: Cascade)
+  Booking Booking[]
+
+  @@map("schedules")
+}
+
+model Booking {
+  id         String   @id @default(uuid())
+  scheduleId String   @map("schedule_id")
+  traineeId  String   @map("trainee_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  schedule Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+  trainee  User     @relation(fields: [traineeId], references: [id], onDelete: Cascade)
+
+  @@unique([scheduleId, traineeId])
+  @@map("bookings")
+}
+```
 
 ## Response Structures
 
