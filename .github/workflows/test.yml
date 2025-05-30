@@ -1,18 +1,57 @@
-name: Docker Image CI
+name: Test
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+on: [workflow_dispatch]
+
+env:
+  NODE_ENV: test
+  PORT: 3001
+  JWT_SECRET: dummysecret
+  ACC_TOKEN_EXP: 300000
+  REF_TOKEN_EXP: 86400000
+  DB_URL: postgresql://testuser:testpassword@localhost:5432/gsms?schema=public
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      - uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.16.0'
+          cache: 'pnpm'
+
+      - name: Enable corepack
+        run: corepack enable
+
+      - name: Install pnpm
+        run: corepack prepare --activate
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run test database
+        run: docker compose up -d postgres-test
+
+      - name: Wait for database to be ready
+        run: |
+          echo "Waiting for database to be ready..."
+          retries=0
+          max_retries=30
+
+          until docker exec postgres-test pg_isready -U testuser -q; do
+            retries=$((retries+1))
+            if [ $retries -ge $max_retries ]; then
+              echo "Postgres did not become ready in time."
+              exit 1
+            fi
+            echo "Waiting... ($retries/$max_retries)"
+            sleep 1
+          done
+
+          echo "Database is ready."
+
+      - name: Run tests
+        run: pnpm test
