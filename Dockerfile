@@ -1,7 +1,6 @@
 # Stage: Install dependencies and generate Prisma client
 FROM node:22.16.0-alpine AS deps
 
-
 WORKDIR /usr/app
 
 COPY package.json pnpm-lock.yaml ./
@@ -10,9 +9,8 @@ RUN corepack enable \
   && corepack prepare --activate
 
 RUN pnpm install --ignore-scripts \
-  && pnpm dlx pnpm-approve-builds --yes \
+  && pnpm approve-builds --yes \
   && pnpm rebuild
-
 
 COPY prisma ./prisma
 

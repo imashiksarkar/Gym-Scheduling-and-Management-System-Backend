@@ -44,7 +44,7 @@ jobs:
       - name: Install dependencies
         run: |
           pnpm install --ignore-scripts
-          pnpm dlx pnpm-approve-builds --yes
+          pnpm approve-builds --yes
           pnpm rebuild
 
       - name: Run test database
