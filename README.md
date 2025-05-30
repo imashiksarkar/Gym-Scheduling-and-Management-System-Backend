@@ -207,6 +207,10 @@ model Booking {
 }
 ```
 
+## CI/CD Pipeline
+
+![CI/CD](./docs/ci-cd-workflow.png)
+
 ## Response Structures
 
 ```json
