@@ -53,4 +53,4 @@ jobs:
           echo "Database is ready."
 
       - name: Run tests
-        run: pnpm test
+        run: pnpm test:run
