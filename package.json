@@ -13,8 +13,7 @@
     "test:run": "vitest --run",
     "db:studio": "prisma studio",
     "db:push": "prisma db push",
-    "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate dev"
+    "db:generate": "prisma generate"
   },
   "keywords": [
     "gym",

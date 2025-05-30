@@ -52,5 +52,11 @@ jobs:
 
           echo "Database is ready."
 
+      - name: Prisma client generate
+        run: pnpm run db:generate
+
+      - name: Prisma client migrate
+        run: pnpm run db:push
+        
       - name: Run tests
-        run: pnpm test:run
+        run: pnpm run test:run
