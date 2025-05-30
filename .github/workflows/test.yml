@@ -1,6 +1,8 @@
-name: Test
+name: App Test
 
-on: [workflow_dispatch]
+on:
+  release:
+    types: [created]
 
 env:
   NODE_ENV: test
@@ -11,25 +13,33 @@ env:
   DB_URL: postgresql://testuser:testpassword@localhost:5432/gsms?schema=public
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Extract release version
+        run: echo "RELEASE_TAG=$(echo ${GITHUB_REF#refs/tags/} | sed 's/^[^0-9]*//')" >> $GITHUB_ENV
 
       - name: Setup node
         uses: actions/setup-node@v4
         with:
           node-version: '22.16.0'
 
-      - name: Enable corepack
-        run: corepack enable
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
 
-      - name: Install pnpm
-        run: corepack prepare --activate
+      - name: Enable corepack & install pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@latest --activate
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install
 
       - name: Run test database
         run: docker compose up -d postgres-test
@@ -57,6 +67,17 @@ jobs:
 
       - name: Prisma client migrate
         run: pnpm run db:push
-        
+
       - name: Run tests
         run: pnpm run test:run
+
+      - name: Trigger Docker Build Workflow with Inputs
+        if: success()
+        env:
+          RELEASE_TAG: ${{ env.RELEASE_TAG }}
+        run: |
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/${{ github.repository }}/actions/workflows/docker-release.yml/dispatches \
+            -d "{\"ref\":\"main\",\"inputs\":{\"release_tag\":\"${RELEASE_TAG}\"}}"

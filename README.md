@@ -1,4 +1,6 @@
-# Gym-Scheduling-and-Management-System-Backend
+# Gym Scheduling and Management System
+
+[![Test](https://github.com/imashiksarkar/Gym-Scheduling-and-Management-System-Backend/actions/workflows/test.yml/badge.svg)](https://github.com/imashiksarkar/Gym-Scheduling-and-Management-System-Backend/actions/workflows/test.yml)
 
 [Live Link](https://gsms-api.ashiksarkar.xyz)
 
