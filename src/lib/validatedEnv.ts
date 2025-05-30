@@ -15,6 +15,7 @@ const validatedEnv = z
     DB_URL: z.string().trim().min(2),
     ACC_TOKEN_EXP: z.coerce.number(),
     REF_TOKEN_EXP: z.coerce.number(),
+    API_URL: z.string().trim().min(2).optional(),
   })
   .transform((oldEnvs) => ({
     ...oldEnvs,

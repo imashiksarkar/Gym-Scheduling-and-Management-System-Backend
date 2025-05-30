@@ -2,7 +2,7 @@ import cookieParser from 'cookie-parser'
 import express, { Request, Response } from 'express'
 import helmet from 'helmet'
 import { cors, db } from './config'
-import { getRelativeTime, response } from './lib'
+import { cron, getRelativeTime, response } from './lib'
 import './lib/processListeners'
 import './lib/validatedEnv'
 import { errorHandler, notFoundHandler } from './middlewares'
@@ -44,6 +44,9 @@ const getAppInstance = async () => {
 
     app.use(notFoundHandler())
     app.use(errorHandler())
+
+    // to avoid cold boot
+    cron()
 
     return app
   } catch (error) {
